@@ -5,8 +5,13 @@
   "scripts": {
     "precreate": "tsc",
     "preupdate": "tsc",
+    "build": "tsc --noemit",
     "serverless:offline": "serverless offline",
-    "type-check": "tsc"
+    "serverless:deploy": "serverless deploy",
+    "prettier:write": "prettier --write .",
+    "eslint:write": "eslint --fix .",
+    "type-check": "tsc",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
@@ -18,15 +23,22 @@
     "@serverless/typescript": "^3.38.0",
     "@types/aws-lambda": "^8.10.145",
     "@types/node": "^22.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
+    "@typescript-eslint/parser": "^8.14.0",
     "esbuild": "^0.24.0",
+    "eslint": "^8",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "glob": "^11.0.0",
     "lambda-tester": "^4.0.1",
+    "prettier": "^3.3.3",
     "serverless": "^3.39.0",
     "serverless-esbuild": "^1.54.5",
     "serverless-offline": "^13.8.3",
     "serverless-plugin-typescript": "^2.1.5",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "husky": "^8.0.0"
   }
 }
