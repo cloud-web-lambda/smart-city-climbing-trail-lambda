@@ -8,6 +8,7 @@
     "build": "tsc --noemit",
     "serverless:offline": "serverless offline",
     "serverless:deploy": "serverless deploy",
+    "serverless:remove": "serverless remove",
     "prettier:write": "prettier --write .",
     "eslint:write": "eslint --fix .",
     "type-check": "tsc",
