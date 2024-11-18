@@ -16,3 +16,9 @@ functions:
       - httpApi:
           path: /test/{age}
           method: GET
+  second-test-handler:
+    handler: ./src/handlers/second-test.handler
+    events:
+      - httpApi:
+          path: /second-test
+          method: GET
