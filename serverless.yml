@@ -22,3 +22,9 @@ functions:
       - httpApi:
           path: /second-test
           method: GET
+  climbing-trail-handler:
+    handler: ./src/handlers/climbing-trail.handler
+    events:
+      - httpApi:
+          path: /climbing/trail
+          method: GET
