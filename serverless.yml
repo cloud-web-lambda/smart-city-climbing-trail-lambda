@@ -3,11 +3,26 @@ service: smart-city-climbing-trail
 plugins:
   - serverless-esbuild
   - serverless-offline
+  - serverless-dotenv-plugin
+
+useDotenv: true
 
 provider:
   name: aws
   runtime: nodejs18.x
   region: ap-northeast-2
+  vpc:
+    securityGroupIds:
+      - sg-037ec9e8db5adb6b3 # Lambda 보안 그룹 ID
+    subnetIds:
+      - subnet-063b0e0f006a3e0af # Private 서브넷 ID 1
+      - subnet-02985762f599046a4 # Private 서브넷 ID 2
+  environment:
+    DB_HOST: ${env:DB_HOST}
+    DB_PORT: 27017
+    DB_USER: ${env:DB_USER}
+    DB_PASS: ${env:DB_PASS}
+    DB_NAME: ${env:DB_NAME}
 
 functions:
   test-handler:
@@ -22,3 +37,19 @@ functions:
       - httpApi:
           path: /second-test
           method: GET
+  db-test-handler:
+    handler: ./src/handlers/db-test.handler
+    events:
+      - httpApi:
+          path: /db-test
+          method: GET
+
+custom:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: true
+    exclude: [aws-sdk] # Lambda 런타임이 기본 포함하는 모듈 제외
+    target: node18
+    platform: node
+    concurrency: 10
