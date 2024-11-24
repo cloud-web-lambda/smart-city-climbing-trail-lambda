@@ -15,15 +15,19 @@ app.post('/auth/callback', async (req: Request, res: Response) => {
 
   try {
     // Cognito 토큰 엔드포인트에 POST 요청
-    const tokenResponse = await axios.post(`${cognitoDomain}/oauth2/token`, qs.stringify({
-      grant_type: 'authorization_code',
-      client_id: clientId,
-      client_secret: clientSecret,
-      code,
-      redirect_uri: redirectUri,
-    }), {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    });
+    const tokenResponse = await axios.post(
+      `${cognitoDomain}/oauth2/token`,
+      qs.stringify({
+        grant_type: 'authorization_code',
+        client_id: clientId,
+        client_secret: clientSecret,
+        code,
+        redirect_uri: redirectUri,
+      }),
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      }
+    );
 
     const { access_token, id_token, refresh_token } = tokenResponse.data;
 
