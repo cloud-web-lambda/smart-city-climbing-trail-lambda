@@ -11,7 +11,7 @@ export const getClimbingInfoApiLocation = (params) => {
         request: 'GetFeature',
         format: 'json',
         data: 'LT_L_FRSTCLIMB',
-        domain: 'http://43.202.215.75:8080',
+        domain: 'https://wlxphet33q45c62r6n6px4vw7u0gbjzg.lambda-url.ap-northeast-2.on.aws/',
         geomFilter: geomFilter,
         buffer,
         page,
