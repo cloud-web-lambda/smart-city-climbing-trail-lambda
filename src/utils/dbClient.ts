@@ -5,7 +5,7 @@ import path from 'path';
 
 let isConnected = false;
 
-const downloadCertificate = async () => {
+const downloadCertificate = async (): Promise<string> => {
   const bucketName = process.env.S3_BUCKET_NAME!;
   const certificateKey = process.env.S3_CERTIFICATE_PATH!;
   const localPath = path.resolve('/tmp/global-bundle.pem');
@@ -53,6 +53,7 @@ const connectDB = async () => {
 
     // 필수 환경 변수 확인
     const { DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME } = process.env;
+
     if (!DB_USER || !DB_PASS || !DB_HOST || !DB_PORT || !DB_NAME) {
       throw new Error('Missing required environment variables for DocumentDB connection');
     }
@@ -65,7 +66,11 @@ const connectDB = async () => {
     console.log(`Using URI: ${uri}`);
 
     // MongoDB 연결
-    await mongoose.connect(uri);
+    await mongoose.connect(uri, {
+      authMechanism: 'SCRAM-SHA-1', // Added to ensure compatibility with DocumentDB
+      tlsCAFile: certificatePath, // Ensure TLS is configured with the correct certificates
+    });
+
     isConnected = true;
     console.log('Connected to DocumentDB');
   } catch (error) {

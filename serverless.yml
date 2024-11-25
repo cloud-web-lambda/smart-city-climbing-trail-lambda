@@ -59,7 +59,7 @@ custom:
     bundle: true
     minify: true
     sourcemap: true
-    exclude: [aws-sdk] # Lambda 런타임이 기본 포함하는 모듈 제외
+    exclude: [] # Lambda 런타임이 기본 포함하는 모듈 제외
     target: node18
     platform: node
     concurrency: 10
