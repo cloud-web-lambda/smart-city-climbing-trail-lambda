@@ -59,6 +59,12 @@ functions:
       - httpApi:
           path: /climbing/trail
           method: GET
+  login-test-handler:
+    handler: ./src/handlers/login-test.handler
+    events:
+      - httpApi:
+          path: /login-test
+          method: GET
 
 custom:
   esbuild:
