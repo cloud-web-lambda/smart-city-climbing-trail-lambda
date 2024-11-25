@@ -23,6 +23,16 @@ provider:
     DB_USER: ${env:DB_USER}
     DB_PASS: ${env:DB_PASS}
     DB_NAME: ${env:DB_NAME}
+    S3_BUCKET_NAME: ${env:S3_BUCKET_NAME}
+    S3_CERTIFICATE_PATH: ${env:S3_CERTIFICATE_PATH}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:GetObject
+          Resource: arn:aws:s3:::${env:S3_BUCKET_NAME}/certificates/*
 
 functions:
   test-handler:
@@ -55,7 +65,7 @@ custom:
     bundle: true
     minify: true
     sourcemap: true
-    exclude: [aws-sdk] # Lambda 런타임이 기본 포함하는 모듈 제외
+    exclude: [] # Lambda 런타임이 기본 포함하는 모듈 제외
     target: node18
     platform: node
     concurrency: 10
