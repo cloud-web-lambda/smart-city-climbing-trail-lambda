@@ -65,7 +65,18 @@ functions:
       - httpApi:
           path: /login-test
           method: GET
-
+  get-hiker-handler:
+    handler: ./src/handlers/get-hiker.handler
+    events:
+      - httpApi:
+          path: /hikers
+          method: GET
+  update-hiker-handler:
+    handler: ./src/handlers/update-hiker.handler
+    events:
+      - httpApi:
+          path: /hikers
+          method: POST
 
 custom:
   esbuild:
