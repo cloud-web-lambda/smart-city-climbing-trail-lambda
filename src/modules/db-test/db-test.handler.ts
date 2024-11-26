@@ -4,7 +4,7 @@ import { DBTestDTO } from '@/modules/db-test/dto/db-test.dto';
 import { DB_TEST_ERROR_CODE } from '@/modules/db-test/exception/db-test-error-code';
 import { DBTestException } from '@/modules/db-test/exception/db-test.exception';
 import connectDB from '@/utils/dbClient';
-import TestModel from '@/modules/test/models/test.model'; // Mongoose 모델
+import TestModel from '@/modules/db-test/models/test.model'; // Mongoose 모델
 
 export const handler = createGatewayHandler<{
   message: string;
