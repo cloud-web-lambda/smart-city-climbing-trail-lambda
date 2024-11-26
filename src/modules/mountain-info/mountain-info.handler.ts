@@ -32,12 +32,14 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       getSunTimes(lat, lng),
     ]);
 
+    // 디버깅 편의성을 위한 결과 처리
     const response: Record<string, any> = {};
     const errors: Array<string> = [];
 
     results.forEach((result, index) => {
       const apiName = ['weather', 'airQuality', 'sunTimes'][index];
       if (result.status === 'fulfilled') response[apiName] = result.value;
+      // result.status === 'rejected'
       else {
         response[apiName] = null;
         const errorMessage = result.reason instanceof Error ? result.reason.message : String(result.reason);

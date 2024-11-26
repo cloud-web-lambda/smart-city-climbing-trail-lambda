@@ -19,4 +19,13 @@ export class AirQualityDTO implements AirQualityDTOProps {
   get ultrafineDustStatus(): 'Good' | 'Bad' {
     return this.ultrafineDustIndex <= 25 ? 'Good' : 'Bad';
   }
+
+  toJSON() {
+    return {
+      fineDustIndex: this.fineDustIndex,
+      ultrafineDustIndex: this.ultrafineDustIndex,
+      fineDustStatus: this.fineDustStatus,
+      ultrafineDustStatus: this.ultrafineDustStatus,
+    };
+  }
 }
