@@ -77,6 +77,18 @@ functions:
       - httpApi:
           path: /hikers
           method: POST
+  find-subways-nearby-handler:
+    handler: ./src/handlers/find-subways-nearby.handler
+    events:
+      - httpApi:
+          path: /subways/nearby
+          method: GET
+  init-subways-nearby-handler:
+    handler: ./src/handlers/init-subways-nearby.handler
+    events:
+      - httpApi:
+          path: /subways/nearby
+          method: POST
 
 custom:
   esbuild:

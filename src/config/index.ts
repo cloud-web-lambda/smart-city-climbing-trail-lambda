@@ -5,6 +5,7 @@ dotenv.config();
 export default {
   // DATA PORTAL
   DATA_PORTAL_API_URL: process.env.DATA_PORTAL_API_URL as string,
+  DATA_PORTAL_API_CSV_URL: process.env.DATA_PORTAL_API_CSV_URL as string,
   DATA_PORTAL_API_KEY: process.env.DATA_PORTAL_API_KEY as string,
   // VWORLD
   VWORLD_API_URL: process.env.VWORLD_API_URL as string,

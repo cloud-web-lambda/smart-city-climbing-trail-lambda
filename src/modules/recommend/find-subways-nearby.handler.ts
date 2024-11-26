@@ -8,9 +8,8 @@ import { haversineDistance } from '@/modules/utils/find-closest-trail';
 import connectDB from '@/utils/dbClient';
 
 export const handler = createGatewayHandler<SubwayStationDTO>(async (req, res) => {
+    
     const { query } = req;
-    // 언제 csv 파일 정보를 업로드할지 고민
-
     // 요청에서 lat와 lng가 있는지 확인
     if (!query || !('lat' in query) || !('lng' in query)) {
         throw new ClimbingTrailException(ERROR_CODE.MISSING_REQUIRED_PARAM);
@@ -18,7 +17,7 @@ export const handler = createGatewayHandler<SubwayStationDTO>(async (req, res) =
 
     const lat = parseFloat(query.lat as string);
     const lng = parseFloat(query.lng as string);
- 
+
     await connectDB();
 
     const subwayStations = await SubwayStationModel.find();
@@ -36,8 +35,8 @@ export const handler = createGatewayHandler<SubwayStationDTO>(async (req, res) =
         const distance = haversineDistance(lat, lng, station.lat, station.lng);
 
         if (distance < minDistance) {
-            minDistance = distance;
-            closestStation = station; // 가장 가까운 역을 업데이트
+        minDistance = distance;
+        closestStation = station; // 가장 가까운 역을 업데이트
         }
     });
 
@@ -46,17 +45,15 @@ export const handler = createGatewayHandler<SubwayStationDTO>(async (req, res) =
     }
 
     const data: SubwayStationDTO = new SubwayStationDTO({
-        stationName: (closestStation as SubwayStation).stationName,  // 타입 단언을 사용
+        stationName: (closestStation as SubwayStation).stationName, // 타입 단언을 사용
         stationLine: (closestStation as SubwayStation).stationLine,
         lat: (closestStation as SubwayStation).lat,
         lng: (closestStation as SubwayStation).lng,
     });
-    
-    
+
     // 응답 객체 생성 및 반환
     return res({
         status: HttpStatus.OK,
         body: data,
     });
-
 });

@@ -1,6 +1,6 @@
 import { HttpStatus } from '@/common/constants/http-status';
 import { createGatewayHandler } from '@/lambda';
-import { hikerDTO } from './dto/hiker.dto';
+import { hikerDTO } from './dto/hikerInfo.dto';
 import { HikerException } from './exception/hiker.exception';
 import { ERROR_CODE } from './exception/error-code';
 import connectDB from '@/utils/dbClient';
@@ -34,7 +34,7 @@ export const handler = createGatewayHandler<hikerDTO>(async (req, res) => {
     await user.save(); // DB에 저장
     console.log('New user created');
   }
-  
+
   // 응답을 위한 DTO 객체 생성
   const hikerData = new hikerDTO({
     sub: user.sub,

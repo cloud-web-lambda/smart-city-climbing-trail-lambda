@@ -6,7 +6,7 @@ import { TrailDTO } from '@/modules/recommend/dto/climbing-trail.dto';
 import { ERROR_CODE } from '@/modules/recommend/exception/error-code';
 import { ClimbingTrailException } from '@/modules/recommend/exception/climbing-trail.exception';
 import { DIFFICULTY_KEY, DIFFICULTY_MAPPER } from '@/modules/recommend/common/climbing-trail.common';
-import { getClimbingInfoApiLocation } from '@/modules/recommend/service/climbing-trail';
+import { getClimbingInfoApi } from '@/modules/recommend/service/climbing-trail';
 import { haversineDistance } from '@/modules/utils/find-closest-trail';
 
 export const handler = createGatewayHandler<TrailDTO>(async (req, res) => {
@@ -20,7 +20,7 @@ export const handler = createGatewayHandler<TrailDTO>(async (req, res) => {
 
   if (!DIFFICULTY_KEY.includes(difficulty)) throw new ClimbingTrailException(ERROR_CODE.VALID_DIFFICULTY_LEVELS);
 
-  const { response } = await getClimbingInfoApiLocation({ lat, lng, difficulty, buffer: 20000, size: 1, page: 1 });
+  const { response } = await getClimbingInfoApi({ lat, lng, difficulty, buffer: 20000, size: 1, page: 1 });
 
   if (response.error) {
     res({
@@ -32,7 +32,7 @@ export const handler = createGatewayHandler<TrailDTO>(async (req, res) => {
   const totalData = response.record.total;
   const responseList = await Promise.all(
     range(1, Math.ceil(totalData / 1000) + 1).map((page) => {
-      return getClimbingInfoApiLocation({ lat, lng, difficulty, buffer: 20000, size: 1000, page });
+      return getClimbingInfoApi({ lat, lng, difficulty, buffer: 20000, size: 1000, page });
     })
   );
 
