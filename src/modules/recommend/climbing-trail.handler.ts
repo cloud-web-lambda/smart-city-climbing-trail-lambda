@@ -45,12 +45,11 @@ export const handler = createGatewayHandler<TrailDTO>(async (req, res) => {
   let closestTrail: any = null;
   let shortestDistance = Infinity; // 가장 짧은 거리를 찾기 위해 큰 값으로 초기화
 
-  // difficultyFilteredList 순회
   difficultyFilteredList.forEach((item) => {
     // item.geometry.coordinates에서 첫 번째 좌표 가져오기
     const coordinates = item.geometry.coordinates;
     coordinates.forEach((innerArray) => {
-      const firstCoord = innerArray[0]; // 첫 번째 내포된 배열
+      const firstCoord = innerArray[0];
       const trailLat = firstCoord[1]; // 위도
       const trailLng = firstCoord[0]; // 경도
 

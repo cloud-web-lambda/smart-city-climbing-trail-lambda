@@ -89,6 +89,24 @@ functions:
       - httpApi:
           path: /subways/nearby
           method: POST
+  get-climbing-monthly-track-handler:
+    handler: ./src/handlers/get-climbing-monthly-track.handler
+    events:
+      - httpApi:
+          path: /climbing/monthly-track/{sub}
+          method: GET
+  get-climbing-track-handler:
+    handler: ./src/handlers/get-climbing-track.handler
+    events:
+      - httpApi:
+          path: /climbing/track/{sub}
+          method: GET
+  update-climbing-track-handler:
+    handler: ./src/handlers/update-climbing-track.handler
+    events:
+      - httpApi:
+          path: /climbing/track/{sub}
+          method: POST
 
 custom:
   esbuild:
