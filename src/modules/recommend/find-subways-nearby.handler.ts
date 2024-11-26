@@ -35,7 +35,7 @@ export const handler = createGatewayHandler<SubwayStationDTO>(async (req, res) =
 
     if (distance < minDistance) {
       minDistance = distance;
-      closestStation = station; 
+      closestStation = station;
     }
   });
 
