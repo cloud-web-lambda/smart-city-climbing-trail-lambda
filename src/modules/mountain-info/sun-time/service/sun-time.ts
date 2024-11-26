@@ -1,9 +1,37 @@
 import axios from 'axios';
+import { SunTimeDTO } from '@/modules/mountain-info/sun-time/dto/sun-time.dto';
+import { SunTimeException } from '../exception/sun-time.exception';
+import { SUN_TIME_ERROR_CODE } from '../exception/sun-time-error-code';
 
-export const getSunTimes = async (lat: number, lng: number) => {
-  const response = await axios.get('https://api.sunrise-sunset.org/json', {
-    params: { lat, lng, formatted: 0 },
-  });
+// Sunrise-Sunset API URL
+const SUNRISE_SUNSET_API_URL = 'https://api.sunrise-sunset.org/json';
 
-  return response.data.results;
+export const getSunTimes = async (lat: number, lng: number): Promise<SunTimeDTO> => {
+  try {
+    const response = await axios.get(SUNRISE_SUNSET_API_URL, {
+      params: {
+        lat,
+        lng,
+        date: 'today',
+        tzid: 'Asia/Seoul', // 서울 시간대
+      },
+    });
+
+    if (!response.data.results) {
+      throw new SunTimeException(SUN_TIME_ERROR_CODE.NO_DATA_FOUND);
+    }
+
+    const { sunrise, sunset } = response.data.results;
+
+    return new SunTimeDTO({
+      sunrise,
+      sunset,
+    });
+  } catch (error: any) {
+    console.error('Error fetching sun times:', {
+      message: error.message,
+      response: error.response?.data,
+    });
+    throw new SunTimeException(SUN_TIME_ERROR_CODE.FETCH_FAILED);
+  }
 };

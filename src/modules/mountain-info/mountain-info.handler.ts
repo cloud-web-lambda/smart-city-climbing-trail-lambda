@@ -26,37 +26,35 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const { lat, lng } = await getCoordinatesByTrailName(trailName);
 
     // 병렬 처리
-    const [weather, airQuality, sunTimes] = await Promise.allSettled([
+    const results = await Promise.allSettled([
       getWeatherAlert(lat, lng),
       getAirQuality(lat, lng),
       getSunTimes(lat, lng),
     ]);
 
+    const response: Record<string, any> = {};
     const errors: Array<string> = [];
-    if (weather.status === 'rejected') {
-      errors.push(`Weather API Error: ${weather.reason}`);
-    }
-    if (airQuality.status === 'rejected') {
-      errors.push(`Air Quality API Error: ${airQuality.reason}`);
-    }
-    if (sunTimes.status === 'rejected') {
-      errors.push(`Sun Times API Error: ${sunTimes.reason}`);
-    }
+
+    results.forEach((result, index) => {
+      const apiName = ['weather', 'airQuality', 'sunTimes'][index];
+      if (result.status === 'fulfilled') response[apiName] = result.value;
+      else {
+        response[apiName] = null;
+        const errorMessage = result.reason instanceof Error ? result.reason.message : String(result.reason);
+        errors.push(`${apiName} API Error: ${errorMessage}`);
+      }
+    });
 
     if (errors.length > 0) {
       return {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        body: JSON.stringify({ message: 'Errors occurred', errors }),
+        body: JSON.stringify({ message: 'Errors occurred', errors, data: response }),
       };
     }
 
     return {
       statusCode: HttpStatus.OK,
-      body: JSON.stringify({
-        weather: weather.status === 'fulfilled' ? weather.value : null,
-        airQuality: airQuality.status === 'fulfilled' ? airQuality.value : null,
-        sunTimes: sunTimes.status === 'fulfilled' ? sunTimes.value : null,
-      }),
+      body: JSON.stringify(response),
     };
   } catch (error) {
     console.error('Error in mountain-info handler:', error);
