@@ -1,14 +1,13 @@
 import { HttpStatus } from '@/common/constants/http-status';
 import { createGatewayHandler } from '@/lambda';
-import { hikerDTO } from './dto/mypage.dto';
+import { hikerDTO } from './dto/hiker.dto';
 import { HikerException } from './exception/hiker.exception';
 import { ERROR_CODE } from './exception/error-code';
 import connectDB from '@/utils/dbClient';
-import HikerInfo from './dto/hikerInfo'; // HikerInfo 모델을 가져옵니다.
+import HikerInfo from './dto/hikerInfo';
 
 // 몸무게 업데이트 기능
 export const handler = createGatewayHandler<hikerDTO>(async (req, res) => {
-
   const { sub, weight } = req.body as { sub: string; weight: number };
 
   if (!sub || !weight) throw new HikerException(ERROR_CODE.MISSING_REQUIRED_PARAM);
@@ -35,7 +34,7 @@ export const handler = createGatewayHandler<hikerDTO>(async (req, res) => {
     await user.save(); // DB에 저장
     console.log('New user created');
   }
-
+  
   // 응답을 위한 DTO 객체 생성
   const hikerData = new hikerDTO({
     sub: user.sub,
