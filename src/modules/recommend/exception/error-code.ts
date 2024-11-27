@@ -7,7 +7,7 @@ export const ERROR_MESSAGE = {
   VALID_DIFFICULTY_LEVELS: `난이도는 ${DIFFICULTY_KEY.join(', ')}중 하나여야 합니다.`,
   INVALID_CLOSEST_TRAIL: '범위 내 가까운 등산로를 찾을 수 없습니다.',
   NO_SUBWAY_STATIONS: '지하철역 정보가 없습니다.',
-  NO_CLOSEST_STATION_FOUND: '가장 가까운 지하철 역 정보가 없습니다.'
+  NO_CLOSEST_STATION_FOUND: '가장 가까운 지하철 역 정보가 없습니다.',
 };
 
 export const ERROR_CODE: ErrorCodeMapper<typeof ERROR_MESSAGE> = {
