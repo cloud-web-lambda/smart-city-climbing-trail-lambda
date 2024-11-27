@@ -7,7 +7,7 @@ import connectDB from '@/utils/dbClient';
 import { range } from 'lodash-es';
 
 export const handler = createGatewayHandler<SubwayStationDTO>(async (req, res) => {
-  //await connectDB();
+  await connectDB();
 
   // API에서 지하철 역 데이터 가져오기
   const subwayStation = await getSubwayStationApi();
@@ -23,11 +23,11 @@ export const handler = createGatewayHandler<SubwayStationDTO>(async (req, res) =
 
   console.log(subwayStations);
 
-  // const savedStations = await SubwayStationModel.insertMany(subwayStations);
+  const savedStations = await SubwayStationModel.insertMany(subwayStations);
   // 모든 데이터 삭제
   // await SubwayStationModel.deleteMany({});
 
-  // console.log(savedStations); // 저장된 역 데이터 확인
+  console.log(savedStations); // 저장된 역 데이터 확인
 
   return res({
     status: HttpStatus.OK,

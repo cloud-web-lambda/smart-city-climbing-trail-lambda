@@ -19,7 +19,7 @@ export const handler = async (event) => {
     const body = JSON.parse(event.body || '{}');
 
     if (!body.email) {
-      throw new Error('Username is required');
+      throw new Error('Email is required');
     }
 
     const { email, password } = body;
