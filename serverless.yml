@@ -131,7 +131,6 @@ functions:
       - httpApi:
           path: /sign-out
           method: POST
-  
 
 custom:
   esbuild:
