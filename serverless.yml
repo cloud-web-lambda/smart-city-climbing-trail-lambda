@@ -25,6 +25,10 @@ provider:
     DB_NAME: ${env:DB_NAME}
     S3_BUCKET_NAME: ${env:S3_BUCKET_NAME}
     S3_CERTIFICATE_PATH: ${env:S3_CERTIFICATE_PATH}
+    GOOGLE_MAPS_API_KEY: ${env:GOOGLE_MAPS_API_KEY}
+    GOOGLE_MAPS_API_URL: ${env:GOOGLE_MAPS_API_URL}
+    DATA_PORTAL_API_URL: ${env:DATA_PORTAL_API_URL}
+    DATA_PORTAL_API_KEY: ${env:DATA_PORTAL_API_KEY}
 
   iam:
     role:
@@ -41,36 +45,42 @@ functions:
       - httpApi:
           path: /test/{age}
           method: GET
+
   second-test-handler:
     handler: ./src/handlers/second-test.handler
     events:
       - httpApi:
           path: /second-test
           method: GET
+
   db-test-handler:
     handler: ./src/handlers/db-test.handler
     events:
       - httpApi:
           path: /db-test
           method: GET
+
   climbing-trail-handler:
     handler: ./src/handlers/climbing-trail.handler
     events:
       - httpApi:
           path: /climbing/trail
           method: GET
+
   login-test-handler:
     handler: ./src/handlers/login-test.handler
     events:
       - httpApi:
           path: /login-test
           method: GET
+
   get-hiker-handler:
     handler: ./src/handlers/get-hiker.handler
     events:
       - httpApi:
           path: /hikers
           method: GET
+
   update-hiker-handler:
     handler: ./src/handlers/update-hiker.handler
     events:
@@ -131,6 +141,13 @@ functions:
       - httpApi:
           path: /sign-out
           method: POST
+
+  mountain-info-handler:
+    handler: ./src/handlers/mountain-info.handler
+    events:
+      - httpApi:
+          path: /mountain-info
+          method: GET
 
 custom:
   esbuild:
