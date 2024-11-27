@@ -7,12 +7,14 @@ import { googleMapsApiClient } from '@/utils/apiClient';
  */
 export const getCoordinatesByTrailName = async (trailName: string): Promise<{ lat: number; lng: number }> => {
   try {
+    const start = Date.now();
     const response = await googleMapsApiClient.get('/place/textsearch/json', {
       params: {
         query: trailName,
         fields: 'geometry',
       },
     });
+    console.log('google maps API call took:', Date.now() - start, 'ms');
 
     if (!response.data.results || response.data.results.length === 0) {
       throw new Error(`No results found for trail name: ${trailName}`);

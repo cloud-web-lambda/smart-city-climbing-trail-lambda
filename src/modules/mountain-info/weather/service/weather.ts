@@ -47,18 +47,21 @@ export const getWeatherAlert = async (lat: number, lon: number): Promise<Weather
     const { nx, ny } = convertToGrid(lat, lon);
 
     // 현재 날짜와 시간 (API에서 요구하는 포맷)
-    const today = new Date();
-    const base_date = today.toISOString().slice(0, 10).replace(/-/g, '');
+    // UTC+9 기준으로 변환
+    const now = new Date();
+    const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC+9 시간으로 변환
+    const base_date = kst.toISOString().slice(0, 10).replace(/-/g, '');
 
     // 현재 시간을 기반으로 base_time 설정
-    const hours = today.getHours();
-    const minutes = today.getMinutes();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
 
     // 초단기실황 데이터의 업데이트는 매시 10분마다 진행됨
     // 10분을 기준으로 이전 시간 사용 여부 결정
     const base_time =
       minutes < 10 ? `${(hours - 1).toString().padStart(2, '0')}00` : `${hours.toString().padStart(2, '0')}00`;
 
+    const start = Date.now();
     const response = await dataPortalApiClient.get('/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst', {
       params: {
         pageNo: 1,
@@ -70,6 +73,13 @@ export const getWeatherAlert = async (lat: number, lon: number): Promise<Weather
         ny,
       },
     });
+    console.log('weather API call took:', Date.now() - start, 'ms');
+
+    console.log(kst);
+    console.log(base_date);
+    console.log(`${hours}:${minutes}`);
+    console.log(base_time);
+    console.log(response.data);
 
     if (!response.data.response.body.items || response.data.response.body.items.length === 0) {
       throw new WeatherException(WEATHER_ERROR_CODE.NO_DATA_FOUND);

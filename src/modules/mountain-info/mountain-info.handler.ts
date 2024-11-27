@@ -26,11 +26,13 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const { lat, lng } = await getCoordinatesByTrailName(trailName);
 
     // 병렬 처리
+    const start = Date.now();
     const results = await Promise.allSettled([
       getWeatherAlert(lat, lng),
       getAirQuality(lat, lng),
       getSunTimes(lat, lng),
     ]);
+    console.log('Execution times:', Date.now() - start);
 
     // 디버깅 편의성을 위한 결과 처리
     const response: Record<string, any> = {};

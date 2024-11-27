@@ -17,6 +17,7 @@ const transformWGS84ToTM = (lat: number, lon: number): { tmX: number; tmY: numbe
 };
 
 const getRealTimeAirQuality = async (stationName: string): Promise<AirQualityData> => {
+  const start = Date.now();
   const response = await dataPortalApiClient.get('/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty', {
     params: {
       stationName,
@@ -27,6 +28,7 @@ const getRealTimeAirQuality = async (stationName: string): Promise<AirQualityDat
       ver: '1.0',
     },
   });
+  console.log('airquality API call took:', Date.now() - start, 'ms');
 
   if (!response.data.response.body.items || response.data.response.body.items.length === 0) {
     throw new AirQualityException(AIR_QUALITY_ERROR_CODE.NO_DATA_FOUND);
@@ -43,6 +45,7 @@ const getRealTimeAirQuality = async (stationName: string): Promise<AirQualityDat
 export const getAirQuality = async (lat: number, lon: number): Promise<AirQualityDTO> => {
   const { tmX, tmY } = transformWGS84ToTM(lat, lon);
 
+  const start = Date.now();
   const stationResponse = await dataPortalApiClient.get('/B552584/MsrstnInfoInqireSvc/getNearbyMsrstnList', {
     params: {
       returnType: 'json',
@@ -51,6 +54,7 @@ export const getAirQuality = async (lat: number, lon: number): Promise<AirQualit
       ver: '1.1',
     },
   });
+  console.log('airquality station API call took:', Date.now() - start, 'ms');
 
   if (!stationResponse.data.response.body.items || stationResponse.data.response.body.items.length === 0) {
     throw new AirQualityException(AIR_QUALITY_ERROR_CODE.NO_STATION_FOUND);

@@ -8,6 +8,7 @@ const SUNRISE_SUNSET_API_URL = 'https://api.sunrise-sunset.org/json';
 
 export const getSunTimes = async (lat: number, lng: number): Promise<SunTimeDTO> => {
   try {
+    const start = Date.now();
     const response = await axios.get(SUNRISE_SUNSET_API_URL, {
       params: {
         lat,
@@ -16,6 +17,7 @@ export const getSunTimes = async (lat: number, lng: number): Promise<SunTimeDTO>
         tzid: 'Asia/Seoul', // 서울 시간대
       },
     });
+    console.log('sun-time API call took:', Date.now() - start, 'ms');
 
     if (!response.data.results) {
       throw new SunTimeException(SUN_TIME_ERROR_CODE.NO_DATA_FOUND);
