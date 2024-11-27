@@ -107,6 +107,31 @@ functions:
       - httpApi:
           path: /climbing/track/{sub}
           method: POST
+  sign-up-handler:
+    handler: ./src/handlers/auth.handler
+    events:
+      - httpApi:
+          path: /sign-up
+          method: POST
+  confirm-up-handler:
+    handler: ./src/handlers/confirm.handler
+    events:
+      - httpApi:
+          path: /confirm
+          method: POST
+  sign-in-handler:
+    handler: ./src/handlers/login.handler
+    events:
+      - httpApi:
+          path: /sign-in
+          method: POST
+  sign-out-handler:
+    handler: ./src/handlers/logout.handler
+    events:
+      - httpApi:
+          path: /sign-out
+          method: POST
+  
 
 custom:
   esbuild:

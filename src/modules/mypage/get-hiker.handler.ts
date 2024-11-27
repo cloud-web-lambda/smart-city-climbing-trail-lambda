@@ -10,7 +10,7 @@ import HikerInfo from './dto/hikerInfo';
 export const handler = createGatewayHandler<hikerDTO>(async (req, res) => {
   const { query } = req;
 
-  const { sub } = req.query as { sub: string };
+  const { sub } = req.query as { sub: string }; // param으로 바꿀지 고민
 
   if (!sub) throw new HikerException(ERROR_CODE.MISSING_REQUIRED_PARAM);
 
