@@ -78,7 +78,7 @@ export async function login({
 
     // 로그인 성공 시 인증 토큰 정보 반환
     return {
-      message: `${Username}님, 로그인에 성공했습니다.`,
+      message: `${Username}이메일로, 로그인에 성공했습니다.`,
       idToken: authResponse.AuthenticationResult?.IdToken,
       accessToken: authResponse.AuthenticationResult?.AccessToken,
       refreshToken: authResponse.AuthenticationResult?.RefreshToken,
