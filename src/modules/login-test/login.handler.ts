@@ -19,16 +19,16 @@ export const handler = async (event) => {
   try {
     const body = JSON.parse(event.body || '{}');
 
-    if (!body.username) {
-      throw new Error('username is required');
+    if (!body.email) {
+      throw new Error('Email is required');
     }
 
-    const { username, password } = body;
+    const { email, password } = body;
 
-    const secretHash = getSecretHash(username, userPoolData.ClientId, clientSecret);
+    const secretHash = getSecretHash(email, userPoolData.ClientId, clientSecret);
 
     const result = await login({
-      Username: username,
+      Username: email,
       Password: password,
       SecretHash: secretHash,
     });

@@ -19,7 +19,7 @@ const swaggerOptions: swaggerJSDoc.Options = {
       },
     ],
   },
-  apis: ['./src/handlers/**/*.ts'], // 경로는 필요에 따라 수정
+  apis: ['./src/handlers/**/*.ts', './src/handlers/auth.ts'], // 경로는 필요에 따라 수정
 };
 
 export default swaggerOptions;
