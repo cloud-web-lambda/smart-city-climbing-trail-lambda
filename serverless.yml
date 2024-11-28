@@ -162,12 +162,20 @@ functions:
     handler: ./src/handlers/swagger.handler
     events:
       - httpApi:
-          path: /api-docs
+          path: /swagger-ui
+          method: GET
+      - httpApi:
+          path: /swagger-ui/{proxy+}
+          method: GET
+      - httpApi:
+          path: /swagger.json
           method: GET
 
 custom:
   esbuild:
     bundle: true
+    external:
+      - swagger-ui-dist
     minify: true
     sourcemap: true
     exclude: [] # Lambda 런타임이 기본 포함하는 모듈 제외

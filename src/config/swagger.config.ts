@@ -10,7 +10,7 @@ const swaggerOptions: swaggerJSDoc.Options = {
     },
     servers: [
       {
-        url: 'https://ek8c3h52ac.execute-api.ap-northeast-2.amazonaws.com//dev',
+        url: 'https://ek8c3h52ac.execute-api.ap-northeast-2.amazonaws.com/dev',
         description: 'Development Environment',
       },
       {
