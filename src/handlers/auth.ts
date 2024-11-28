@@ -4,8 +4,8 @@ export { handler } from '@/modules/login-test/auth.handler';
  * @swagger
  * /sign-up:
  *   post:
- *     summary: 회원가입
- *     description: 사용자 이메일과 비밀번호를 사용하여 회원가입을 처리합니다.
+ *     summary: Sign up to the application
+ *     description: Sign up the user with their email and password
  *     requestBody:
  *       required: true
  *       content:
@@ -15,15 +15,15 @@ export { handler } from '@/modules/login-test/auth.handler';
  *             properties:
  *               email:
  *                 type: string
- *                 description: 사용자의 이메일 주소
+ *                 description: email
  *                 example: "pyeonk33@gmail.com"
  *               password:
  *                 type: string
- *                 description: 사용자의 비밀번호
+ *                 description: password
  *                 example: "Abcde12345**"
  *     responses:
  *       200:
- *         description: 성공적인 회원가입 응답
+ *         description: Successful response
  *         content:
  *           application/json:
  *             schema:
@@ -34,10 +34,10 @@ export { handler } from '@/modules/login-test/auth.handler';
  *                   example: "pyeonk33@gmail.com 이메일로 회원 가입이 성공적으로 완료되었습니다."
  *                 sub:
  *                   type: string
- *                   description: 사용자 고유 아이디
  *                   example: "74d87d9c-20a1-7039-6a3d-070c869a779e"
  *       400:
- *         description: 잘못된 요청 (예: 이메일 또는 비밀번호 형식 오류)
+ *         description: Missing Parameter
  *       500:
- *         description: 서버 오류
+ *         description: Internal server error
  */
+
