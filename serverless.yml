@@ -15,7 +15,7 @@ provider:
     securityGroupIds:
       - sg-037ec9e8db5adb6b3 # Lambda 보안 그룹 ID
     subnetIds:
-      # - subnet-063b0e0f006a3e0af # Private 서브넷 ID 2b
+      - subnet-063b0e0f006a3e0af # Private 서브넷 ID 2b
       - subnet-02985762f599046a4 # Private 서브넷 ID 2a
   environment:
     DB_HOST: ${env:DB_HOST}
@@ -189,3 +189,6 @@ custom:
     target: node18
     platform: node
     concurrency: 10
+
+package:
+  individually: true
