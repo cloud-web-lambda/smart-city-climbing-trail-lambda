@@ -95,6 +95,13 @@ functions:
           path: /mountain-info
           method: GET
 
+  swagger-handler:
+    handler: ./src/handlers/swagger.handler
+    events:
+      - httpApi:
+          path: /api-docs
+          method: GET
+
 custom:
   esbuild:
     bundle: true
