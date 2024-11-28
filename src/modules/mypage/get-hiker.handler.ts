@@ -1,6 +1,6 @@
 import { HttpStatus } from '@/common/constants/http-status';
 import { createGatewayHandler } from '@/lambda';
-import { hikerDTO } from './dto/hiker.dto';
+import { hikerDTO } from './dto/hikerInfo.dto';
 import { HikerException } from './exception/hiker.exception';
 import { ERROR_CODE } from './exception/error-code';
 import connectDB from '@/utils/dbClient';
@@ -9,8 +9,8 @@ import HikerInfo from './dto/hikerInfo';
 // 몸무게 조회 기능
 export const handler = createGatewayHandler<hikerDTO>(async (req, res) => {
   const { query } = req;
-  
-  const { sub } = req.query as { sub: string };
+
+  const { sub } = req.query as { sub: string }; // param으로 바꿀지 고민
 
   if (!sub) throw new HikerException(ERROR_CODE.MISSING_REQUIRED_PARAM);
 

@@ -6,7 +6,7 @@ import { TrailDTO } from '@/modules/recommend/dto/climbing-trail.dto';
 import { ERROR_CODE } from '@/modules/recommend/exception/error-code';
 import { ClimbingTrailException } from '@/modules/recommend/exception/climbing-trail.exception';
 import { DIFFICULTY_KEY, DIFFICULTY_MAPPER } from '@/modules/recommend/common/climbing-trail.common';
-import { getClimbingInfoApiLocation } from '@/modules/recommend/service/climbing-trail';
+import { getClimbingInfoApi } from '@/modules/recommend/service/climbing-trail';
 import { haversineDistance } from '@/modules/utils/find-closest-trail';
 
 export const handler = createGatewayHandler<TrailDTO>(async (req, res) => {
@@ -20,7 +20,7 @@ export const handler = createGatewayHandler<TrailDTO>(async (req, res) => {
 
   if (!DIFFICULTY_KEY.includes(difficulty)) throw new ClimbingTrailException(ERROR_CODE.VALID_DIFFICULTY_LEVELS);
 
-  const { response } = await getClimbingInfoApiLocation({ lat, lng, difficulty, buffer: 20000, size: 1, page: 1 });
+  const { response } = await getClimbingInfoApi({ lat, lng, difficulty, buffer: 20000, size: 1, page: 1 });
 
   if (response.error) {
     res({
@@ -32,7 +32,7 @@ export const handler = createGatewayHandler<TrailDTO>(async (req, res) => {
   const totalData = response.record.total;
   const responseList = await Promise.all(
     range(1, Math.ceil(totalData / 1000) + 1).map((page) => {
-      return getClimbingInfoApiLocation({ lat, lng, difficulty, buffer: 20000, size: 1000, page });
+      return getClimbingInfoApi({ lat, lng, difficulty, buffer: 20000, size: 1000, page });
     })
   );
 
@@ -45,12 +45,11 @@ export const handler = createGatewayHandler<TrailDTO>(async (req, res) => {
   let closestTrail: any = null;
   let shortestDistance = Infinity; // 가장 짧은 거리를 찾기 위해 큰 값으로 초기화
 
-  // difficultyFilteredList 순회
   difficultyFilteredList.forEach((item) => {
     // item.geometry.coordinates에서 첫 번째 좌표 가져오기
     const coordinates = item.geometry.coordinates;
     coordinates.forEach((innerArray) => {
-      const firstCoord = innerArray[0]; // 첫 번째 내포된 배열
+      const firstCoord = innerArray[0];
       const trailLat = firstCoord[1]; // 위도
       const trailLng = firstCoord[0]; // 경도
 

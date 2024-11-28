@@ -1,6 +1,6 @@
 import { vworldApiClient } from '@/utils/apiClient';
 
-export const getClimbingInfoApiLocation = (params) => {
+export const getClimbingInfoApi = (params) => {
   const { lat, lng, buffer, page, size } = params;
   const geomFilter = `POINT(${lng} ${lat})`;
 

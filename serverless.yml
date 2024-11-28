@@ -39,19 +39,19 @@ provider:
           Resource: arn:aws:s3:::${env:S3_BUCKET_NAME}/certificates/*
 
 functions:
-  test-handler:
-    handler: ./src/handlers/test.handler
-    events:
-      - httpApi:
-          path: /test/{age}
-          method: GET
+  # test-handler:
+  #   handler: ./src/handlers/test.handler
+  #   events:
+  #     - httpApi:
+  #         path: /test/{age}
+  #         method: GET
 
-  second-test-handler:
-    handler: ./src/handlers/second-test.handler
-    events:
-      - httpApi:
-          path: /second-test
-          method: GET
+  # second-test-handler:
+  #   handler: ./src/handlers/second-test.handler
+  #   events:
+  #     - httpApi:
+  #         path: /second-test
+  #         method: GET
 
   db-test-handler:
     handler: ./src/handlers/db-test.handler
@@ -74,19 +74,82 @@ functions:
           path: /login-test
           method: GET
 
-  get-hiker-handler:
-    handler: ./src/handlers/get-hiker.handler
+  # get-hiker-handler:
+  #   handler: ./src/handlers/get-hiker.handler
+  #   events:
+  #     - httpApi:
+  #         path: /hikers
+  #         method: GET
+
+  # update-hiker-handler:
+  #   handler: ./src/handlers/update-hiker.handler
+  #   events:
+  #     - httpApi:
+  #         path: /hikers
+  #         method: POST
+
+  # find-subways-nearby-handler:
+  #   handler: ./src/handlers/find-subways-nearby.handler
+  #   events:
+  #     - httpApi:
+  #         path: /subways/nearby
+  #         method: GET
+
+  # init-subways-nearby-handler:
+  #   handler: ./src/handlers/init-subways-nearby.handler
+  #   events:
+  #     - httpApi:
+  #         path: /subways/nearby
+  #         method: POST
+
+  get-climbing-monthly-track-handler:
+    handler: ./src/handlers/get-climbing-monthly-track.handler
     events:
       - httpApi:
-          path: /hikers
+          path: /climbing/monthly-track/{sub}
           method: GET
 
-  update-hiker-handler:
-    handler: ./src/handlers/update-hiker.handler
+  get-climbing-track-handler:
+    handler: ./src/handlers/get-climbing-track.handler
     events:
       - httpApi:
-          path: /hikers
+          path: /climbing/track/{sub}
+          method: GET
+
+  update-climbing-track-handler:
+    handler: ./src/handlers/update-climbing-track.handler
+    events:
+      - httpApi:
+          path: /climbing/track/{sub}
           method: POST
+
+  # sign-up-handler:
+  #   handler: ./src/handlers/auth.handler
+  #   events:
+  #     - httpApi:
+  #         path: /sign-up
+  #         method: POST
+
+  # confirm-up-handler:
+  #   handler: ./src/handlers/confirm.handler
+  #   events:
+  #     - httpApi:
+  #         path: /confirm
+  #         method: POST
+
+  # sign-in-handler:
+  #   handler: ./src/handlers/login.handler
+  #   events:
+  #     - httpApi:
+  #         path: /sign-in
+  #         method: POST
+
+  # sign-out-handler:
+  #   handler: ./src/handlers/logout.handler
+  #   events:
+  #     - httpApi:
+  #         path: /sign-out
+  #         method: POST
 
   mountain-info-handler:
     handler: ./src/handlers/mountain-info.handler
