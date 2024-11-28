@@ -26,6 +26,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "lodash-es": "^4.17.21",
+    "moment-timezone": "^0.5.46",
     "mongoose": "^8.8.2",
     "proj4": "^2.15.0",
     "swagger-jsdoc": "^6.2.8",

@@ -2,6 +2,7 @@ import { dataPortalApiClient } from '@/utils/apiClient';
 import { WeatherDTO } from '@/modules/mountain-info/weather/dto/weather.dto';
 import { WeatherException } from '../exception/weather.exception';
 import { WEATHER_ERROR_CODE } from '../exception/weather-error-code';
+import moment from 'moment-timezone';
 
 const convertToGrid = (lat: number, lon: number): { nx: number; ny: number } => {
   const RE = 6371.00877;
@@ -47,19 +48,28 @@ export const getWeatherAlert = async (lat: number, lon: number): Promise<Weather
     const { nx, ny } = convertToGrid(lat, lon);
 
     // 현재 날짜와 시간 (API에서 요구하는 포맷)
-    // UTC+9 기준으로 변환
-    const now = new Date();
-    const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC+9 시간으로 변환
-    const base_date = kst.toISOString().slice(0, 10).replace(/-/g, '');
+    // 현재 시각 기준으로 base_date와 base_time 설정
+    const now = moment().tz('Asia/Seoul');
 
-    // 현재 시간을 기반으로 base_time 설정
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
+    // 기준 시간이 10분 이전인 경우, 이전 시간과 날짜를 사용
+    let base_date;
+    let base_time;
 
     // 초단기실황 데이터의 업데이트는 매시 10분마다 진행됨
     // 10분을 기준으로 이전 시간 사용 여부 결정
-    const base_time =
-      minutes < 10 ? `${(hours - 1).toString().padStart(2, '0')}00` : `${hours.toString().padStart(2, '0')}00`;
+    if (now.minute() < 10) {
+      // 이전 시간으로 이동
+      const previousHour = now.subtract(1, 'hour');
+      base_date = previousHour.format('YYYYMMDD'); // 이전 시간의 날짜
+      base_time = previousHour.format('HH00'); // 이전 시간의 시간
+    } else {
+      // 현재 시간 사용
+      base_date = now.format('YYYYMMDD');
+      base_time = now.format('HH00');
+    }
+
+    console.log(base_date);
+    console.log(base_time);
 
     const start = Date.now();
     const response = await dataPortalApiClient.get('/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst', {
@@ -75,10 +85,6 @@ export const getWeatherAlert = async (lat: number, lon: number): Promise<Weather
     });
     console.log('weather API call took:', Date.now() - start, 'ms');
 
-    console.log(kst);
-    console.log(base_date);
-    console.log(`${hours}:${minutes}`);
-    console.log(base_time);
     console.log(response.data);
 
     if (!response.data.response.body.items || response.data.response.body.items.length === 0) {
