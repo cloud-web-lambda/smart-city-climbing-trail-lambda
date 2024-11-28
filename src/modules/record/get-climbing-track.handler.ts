@@ -51,6 +51,8 @@ export const handler = createGatewayHandler<ClimbingTotalDTO>(async (req, res) =
     trails,
   });
 
+  //await ClimbingTrackModel.deleteOne({ sub });
+
   return res({
     status: HttpStatus.OK,
     body: data,
