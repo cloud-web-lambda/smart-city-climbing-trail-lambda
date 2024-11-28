@@ -4,9 +4,15 @@ import ClimbingTrackModel from './dto/climbing-track';
 import { HttpStatus } from '@/common/constants/http-status';
 import { createGatewayHandler } from '@/lambda';
 import connectDB from '@/utils/dbClient';
+import { ERROR_CODE } from './exception/error-code';
+import { ClimbingTrackException } from './exception/climbing-track.exception';
 
 export const handler = createGatewayHandler<ClimbingTrackDTO>(async (req, res) => {
   const { sub } = req.params as { sub: string };
+  if (!sub) {
+    throw new ClimbingTrackException(ERROR_CODE.MISSING_REQUIRED_PARAM)
+  }
+  
   const { trailName, startDate, endDate, distance, calories } = req.body as {
     trailName: string;
     startDate: Date;
@@ -14,6 +20,10 @@ export const handler = createGatewayHandler<ClimbingTrackDTO>(async (req, res) =
     distance: number;
     calories: number;
   };
+
+  if (!trailName || !startDate || !endDate || !distance || !calories) {
+    throw new ClimbingTrackException(ERROR_CODE.NOT_FORMAT)
+  }
 
   await connectDB();
 

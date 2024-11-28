@@ -22,12 +22,12 @@ export const handler = async (event) => {
       throw new Error('confirmationCode is required');
     }
 
-    const { confirmationCode, username } = body;
+    const { confirmationCode, sub } = body;
 
-    const secretHash = getSecretHash(username, userPoolData.ClientId, clientSecret);
+    const secretHash = getSecretHash(sub, userPoolData.ClientId, clientSecret);
 
     const result = await confirm({
-      Username: username,
+      Username: sub,
       ConfirmationCode: confirmationCode,
       SecretHash: secretHash,
     });
