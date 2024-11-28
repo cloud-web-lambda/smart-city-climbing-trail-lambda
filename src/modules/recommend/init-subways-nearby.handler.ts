@@ -30,7 +30,7 @@ export const handler = createGatewayHandler<SubwayStationDTO>(async (req, res) =
   //console.log(savedStations); // 저장된 역 데이터 확인
 
   // 저장된 역이 확인되면 "message": "지하철 정보가 업로드되었습니다." 로 변경
-  
+
   return res({
     status: HttpStatus.OK,
     body: subwayStations,
