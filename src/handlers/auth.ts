@@ -40,4 +40,3 @@ export { handler } from '@/modules/login-test/auth.handler';
  *       500:
  *         description: Internal server error
  */
-
