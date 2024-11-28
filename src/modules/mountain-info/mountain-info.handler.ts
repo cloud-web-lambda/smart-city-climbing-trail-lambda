@@ -24,9 +24,12 @@ export const handler = createGatewayHandler(async (req, res) => {
 
   // 위도와 경도 가져오기
   const { lat, lng } = await getCoordinatesByTrailName(trailName);
+  // const lat = 37.660934;
+  // const lng = 126.993247;
 
   // 병렬 처리
   const start = Date.now();
+  console.log('Before API calls');
   const results = await Promise.allSettled([getWeatherAlert(lat, lng), getAirQuality(lat, lng), getSunTimes(lat, lng)]);
   console.log('Execution times:', Date.now() - start);
 

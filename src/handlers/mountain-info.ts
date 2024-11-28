@@ -1,4 +1,3 @@
-export { handler } from '@/modules/mountain-info/mountain-info.handler';
 /**
  * @swagger
  * /mountain-info:
@@ -31,3 +30,4 @@ export { handler } from '@/modules/mountain-info/mountain-info.handler';
  *       500:
  *         description: Internal server error
  */
+export { handler } from '@/modules/mountain-info/mountain-info.handler';
