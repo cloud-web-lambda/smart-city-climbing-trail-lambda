@@ -1,11 +1,13 @@
-export { handler } from '@/modules/login-test/logout.handler';
+export { handler } from '@/modules/login/logout.handler';
 
 /**
  * @swagger
  * /sign-out:
  *   post:
  *     summary: Log out from the application
- *     description: Logs out the user from all sessions using the provided access token
+ *     description: |
+ *       [로그인 페이지]
+ *       - 사용자의 액세스 토큰으로 현재 세션에 대해 종료합니다.
  *     security:
  *       - Bearer: []
  *     parameters:

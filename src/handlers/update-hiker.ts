@@ -5,7 +5,9 @@ export { handler } from '@/modules/mypage/update-hiker.handler';
  * /hikers:
  *   post:
  *     summary: Create or update hiker information
- *     description: Create or update the hiker's weight based on the provided sub (user identifier).
+ *     description: |
+ *       [마이 페이지]
+ *       - 등산객의 신체정보(몸무게)를 저장합니다.
  *     requestBody:
  *       required: true
  *       content:

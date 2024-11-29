@@ -5,7 +5,9 @@ export { handler } from '@/modules/recommend/find-subways-nearby.handler';
  * /subways/nearby:
  *   get:
  *     summary: Get nearby subway station information
- *     description: Retrieves the nearest subway station information based on provided latitude and longitude.
+ *     description: |
+ *       [가까운 지하철 정보 제공 페이지]
+ *       - 하산할 때, 사용자 위치로부터 가까운 지하철 역 정보를 제공합니다.
  *     parameters:
  *       - in: query
  *         name: lat

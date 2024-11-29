@@ -1,1 +1,1 @@
-export { handler } from '@/modules/login-test/login-test.handler';
+export { handler } from '@/modules/login/login-test.handler';

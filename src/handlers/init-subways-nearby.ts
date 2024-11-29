@@ -5,7 +5,9 @@ export { handler } from '@/modules/recommend/init-subways-nearby.handler';
  * /subways/nearby:
  *   post:
  *     summary: Upload subway station information
- *     description: Sends subway station data and updates the system with nearby subway station information.
+ *     description: |
+ *       [가까운 지하철 정보 제공 페이지]
+ *       - 지하철 역 정보를 DB에 저장합니다.
  *     responses:
  *       200:
  *         description: Subway information uploaded successfully

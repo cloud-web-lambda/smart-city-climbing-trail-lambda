@@ -1,11 +1,13 @@
-export { handler } from '@/modules/login-test/login.handler';
+export { handler } from '@/modules/login/login.handler';
 
 /**
  * @swagger
  * /sign-in:
  *   post:
  *     summary: Sign in to the application
- *     description: Logs in the user with their email and password
+ *     description: |
+ *       [로그인 페이지]
+ *       - 회원가입한 이메일과 비밀번호로 로그인합니다.
  *     requestBody:
  *       required: true
  *       content:

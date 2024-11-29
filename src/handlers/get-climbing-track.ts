@@ -5,7 +5,9 @@ export { handler } from '@/modules/record/get-climbing-track.handler';
  * /climbing/track/{sub}:
  *   get:
  *     summary: Get monthly climbing track for a specific user
- *     description: Fetch monthly climbing statistics for the user identified by the 'sub' parameter.
+ *     description: |
+ *       [등산기록 조회 페이지]
+ *       - 전체 사용자의 등산기록을 조회합니다.
  *     parameters:
  *       - name: sub
  *         in: path
