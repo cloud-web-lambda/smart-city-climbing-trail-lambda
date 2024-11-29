@@ -1,12 +1,6 @@
 import { CognitoIdentityProviderClient, SignUpCommand } from '@aws-sdk/client-cognito-identity-provider';
 import * as crypto from 'crypto';
-
-const userPoolData = {
-  UserPoolId: 'ap-northeast-2_Ul7NYddea',
-  ClientId: '6l8va8f1jmgkni1hh5ij54o68m',
-};
-
-const clientSecret = '2nu888uqdpkd38sk0g7v7m1hh98bcpvg8k5vn1id81p94iv629u';
+import env from '@/config';
 
 function getSecretHash(username: string, clientId: string, clientSecret: string) {
   const hmac = crypto.createHmac('sha256', clientSecret);
@@ -23,8 +17,8 @@ export const handler = async (event) => {
     }
 
     const { email, password } = body;
-    const clientId = userPoolData.ClientId;
-    const secretHash = getSecretHash(email, clientId, clientSecret);
+    const clientId = env.CLIENT_ID;
+    const secretHash = getSecretHash(email, clientId, env.CLIENT_SECRET);
 
     const result = await signUp({
       Username: email,
@@ -38,7 +32,6 @@ export const handler = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
-    console.error('Error:', error);
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -60,10 +53,10 @@ export async function signUp({
   Email: string;
   secretHash: string;
 }): Promise<{ message: string; sub: string }> {
-  const client = new CognitoIdentityProviderClient({ region: 'ap-northeast-2' }); // 적절한 리전으로 변경
+  const client = new CognitoIdentityProviderClient({ region: env.REGION }); // 적절한 리전으로 변경
 
   const command = new SignUpCommand({
-    ClientId: userPoolData.ClientId,
+    ClientId: env.CLIENT_ID,
     Username: Username,
     Password: Password,
     SecretHash: secretHash,
@@ -83,7 +76,6 @@ export async function signUp({
       sub: `${sub}`,
     };
   } catch (error) {
-    console.error('Signup error:', error);
     throw error;
   }
 }
