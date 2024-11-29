@@ -1,4 +1,8 @@
-import { CognitoIdentityProviderClient, GlobalSignOutCommand, RevokeTokenCommand } from '@aws-sdk/client-cognito-identity-provider';
+import {
+  CognitoIdentityProviderClient,
+  GlobalSignOutCommand,
+  RevokeTokenCommand,
+} from '@aws-sdk/client-cognito-identity-provider';
 import env from '@/config';
 
 export const handler = async (event) => {
@@ -20,7 +24,7 @@ export const handler = async (event) => {
     // GlobalSignOutCommand를 사용하여 모든 세션 로그아웃 처리
     const command = new GlobalSignOutCommand({ AccessToken: accessToken });
 
-    // const command = new RevokeTokenCommand({ 
+    // const command = new RevokeTokenCommand({
     //   Token: accessToken,
     //   ClientId: env.CLIENT_ID
     // });
