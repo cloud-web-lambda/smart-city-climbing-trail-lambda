@@ -5,7 +5,9 @@ export { handler } from '@/modules/mypage/get-hiker.handler';
  * /hikers:
  *   get:
  *     summary: Get hiker details by sub
- *     description: Fetch details of a hiker based on the sub (user identifier).
+ *     description: |
+ *       [마이 페이지]
+ *       - 등산객의 신체정보(몸무게)를 조회합니다.
  *     parameters:
  *       - name: sub
  *         in: query

@@ -1,30 +1,39 @@
-import { CognitoIdentityProviderClient, GlobalSignOutCommand } from '@aws-sdk/client-cognito-identity-provider';
+import {
+  CognitoIdentityProviderClient,
+  GlobalSignOutCommand,
+  RevokeTokenCommand,
+} from '@aws-sdk/client-cognito-identity-provider';
+import env from '@/config';
 
 export const handler = async (event) => {
-  const client = new CognitoIdentityProviderClient({ region: 'ap-northeast-2' });
+  const client = new CognitoIdentityProviderClient({ region: env.REGION });
 
   try {
-    // Authorization 헤더에서 Access Token 추출
     const authorizationHeader = event.headers?.Authorization || event.headers?.authorization;
 
     if (!authorizationHeader) {
-      throw new Error('Authorization header is missing.');
+      throw new Error('Authorization 헤더가 비어있습니다.');
     }
 
-    //Bearer <token> 형식에서 토큰만 추출
     const accessToken = authorizationHeader.startsWith('Bearer ') ? authorizationHeader.slice(7) : authorizationHeader;
 
     if (!accessToken) {
-      throw new Error('Access token is missing in the Authorization header.');
+      throw new Error('액세스 토큰이 누락되었습니다.');
     }
 
     // GlobalSignOutCommand를 사용하여 모든 세션 로그아웃 처리
     const command = new GlobalSignOutCommand({ AccessToken: accessToken });
+
+    // const command = new RevokeTokenCommand({
+    //   Token: accessToken,
+    //   ClientId: env.CLIENT_ID
+    // });
+
     const response = await client.send(command);
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'Successfully logged out from all sessions.' }),
+      body: JSON.stringify({ message: '모든 세션에 대해 성공적으로 로그아웃 처리되었습니다.' }),
     };
   } catch (error) {
     console.error('Logout error:', error);

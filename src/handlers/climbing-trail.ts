@@ -5,7 +5,9 @@ export { handler } from '@/modules/recommend/climbing-trail.handler';
  * /climbing/trail:
  *   get:
  *     summary: Get climbing trail information
- *     description: Retrieves information about a climbing trail based on the provided coordinates and difficulty.
+ *     description: |
+ *       [등산로 추천 페이지]
+ *       - 사용자 위치로부터 가장 가까운 등산로 정보를 제공합니다.
  *     parameters:
  *       - in: query
  *         name: lat

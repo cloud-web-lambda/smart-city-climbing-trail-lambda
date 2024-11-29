@@ -1,11 +1,19 @@
-export { handler } from '@/modules/login-test/auth.handler';
+export { handler } from '@/modules/login/auth.handler';
 
 /**
  * @swagger
  * /sign-up:
  *   post:
  *     summary: Sign up to the application
- *     description: Sign up the user with their email and password
+ *     description: |
+ *       [회원가입 페이지]
+ *       - 이메일은 Gmail이어야 합니다.
+ *       - 비밀번호는 다음 조건을 만족해야 합니다.
+ *         - 암호 최소 길이는 8자 이상
+ *         - 대문자 영어 1개 이상 포함
+ *         - 소문자 영어 1개 이상 포함
+ *         - 숫자 1개 이상 포함
+ *         - 특수 문자 1개 이상 포함
  *     requestBody:
  *       required: true
  *       content:

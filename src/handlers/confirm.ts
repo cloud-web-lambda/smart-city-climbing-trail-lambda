@@ -1,11 +1,13 @@
-export { handler } from '@/modules/login-test/confirm.handler';
+export { handler } from '@/modules/login/confirm.handler';
 
 /**
  * @swagger
  * /confirm:
  *   post:
  *     summary: Confirm code
- *     description: Confirm code
+ *     description: |
+ *       [회원가입 페이지]
+ *       - 이메일로 전송된 인증코드를 검증합니다.
  *     requestBody:
  *       required: true
  *       content:

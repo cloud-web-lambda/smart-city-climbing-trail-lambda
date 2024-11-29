@@ -5,7 +5,9 @@ export { handler } from '@/modules/record/update-climbing-track.handler';
  * /climbing/track/{sub}:
  *   post:
  *     summary: Add a new climbing track entry for a user
- *     description: Adds a new climbing track for the user identified by the 'sub' parameter.
+ *     description: |
+ *       [등산기록 저장 페이지]
+ *       - 사용자의 등산기록을 저장합니다.
  *     parameters:
  *       - name: sub
  *         in: path
