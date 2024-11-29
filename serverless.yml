@@ -178,6 +178,20 @@ functions:
           path: /swagger.json
           method: GET
 
+  alternative-recommendation-handler:
+    handler: ./src/handlers/alternative-trail.handler
+    events:
+      - httpApi:
+          path: /climbing/trail/alternative
+          method: GET
+
+  different-recommendation-handler:
+    handler: ./src/handlers/different-trail.handler
+    events:
+      - httpApi:
+          path: /climbing/trail/different
+          method: GET
+
 custom:
   esbuild:
     bundle: true
