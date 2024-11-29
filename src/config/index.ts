@@ -23,4 +23,9 @@ export default {
   // S3
   S3_BUCKET_NAME: process.env.S3_BUCKET_NAME as string,
   S3_CERTIFICATE_PATH: process.env.S3_CERTIFICATE_PATH as string,
+  // COGNITO
+  USER_POOL_ID: process.env.USER_POOL_ID as string,
+  CLIENT_ID: process.env.CLIENT_ID as string,
+  CLIENT_SECRET: process.env.CLIENT_SECRET as string,
+  REGION: process.env.REGION as string,
 };
