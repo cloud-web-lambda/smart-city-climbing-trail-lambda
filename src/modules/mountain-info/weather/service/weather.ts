@@ -1,5 +1,3 @@
-// src/modules/mountain-info/weather/getWeatherAlert.ts
-
 import { dataPortalApiClient } from '@/utils/apiClient';
 import { WeatherDTO } from '../dto/weather.dto';
 import { WeatherException } from '../exception/weather.exception';
