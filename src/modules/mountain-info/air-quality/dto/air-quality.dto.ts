@@ -1,26 +1,3 @@
-/**
- * @swagger
- * components:
- *   schemas:
- *     AirQualityDTO:
- *       type: object
- *       properties:
- *         fineDustIndex:
- *           type: number
- *           description: 미세먼지 지수
- *         ultrafineDustIndex:
- *           type: number
- *           description: 초미세먼지 지수
- *         fineDustStatus:
- *           type: string
- *           enum: [Good, Bad]
- *           description: 미세먼지 상태 ('Good' 또는 'Bad')
- *         ultrafineDustStatus:
- *           type: string
- *           enum: [Good, Bad]
- *           description: 초미세먼지 상태 ('Good' 또는 'Bad')
- */
-
 export interface AirQualityDTOProps {
   fineDustIndex: number;
   ultrafineDustIndex: number;
