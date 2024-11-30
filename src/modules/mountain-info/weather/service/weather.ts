@@ -1,9 +1,14 @@
+// src/modules/mountain-info/weather/getWeatherAlert.ts
+
 import { dataPortalApiClient } from '@/utils/apiClient';
-import { WeatherDTO } from '@/modules/mountain-info/weather/dto/weather.dto';
+import { WeatherDTO } from '../dto/weather.dto';
 import { WeatherException } from '../exception/weather.exception';
 import { WEATHER_ERROR_CODE } from '../exception/weather-error-code';
 import moment from 'moment-timezone';
 
+/**
+ * 위도와 경도를 격자 좌표(nx, ny)로 변환하는 함수
+ */
 const convertToGrid = (lat: number, lon: number): { nx: number; ny: number } => {
   const RE = 6371.00877;
   const GRID = 5.0;
@@ -42,67 +47,101 @@ const convertToGrid = (lat: number, lon: number): { nx: number; ny: number } => 
   return { nx, ny };
 };
 
+/**
+ * 기상청 API를 호출하여 날씨 정보를 가져오는 함수
+ * @param lat 위도
+ * @param lon 경도
+ * @returns WeatherDTO
+ */
 export const getWeatherAlert = async (lat: number, lon: number): Promise<WeatherDTO> => {
-  try {
-    // 위도와 경도를 기상청 API의 격자 좌표로 변환
-    const { nx, ny } = convertToGrid(lat, lon);
+  const maxRetries = 6; // 최대 6회 재시도 (6시간 전까지)
+  let attempt = 0;
+  let weatherData: WeatherDTO | null = null;
 
-    // 현재 날짜와 시간 (API에서 요구하는 포맷)
-    // 현재 시각 기준으로 base_date와 base_time 설정
-    const now = moment().tz('Asia/Seoul');
+  // 격자 좌표 변환
+  const { nx, ny } = convertToGrid(lat, lon);
+  console.log(`lat=${lat}, lon=${lon}, nx=${nx}, ny=${ny}`);
 
-    // 기준 시간이 10분 이전인 경우, 이전 시간과 날짜를 사용
-    let base_date;
-    let base_time;
+  while (attempt < maxRetries && !weatherData) {
+    try {
+      // 현재 시각 기준으로 40분 + 60분 * attempt 이전의 시각을 사용
+      let now = moment()
+        .tz('Asia/Seoul')
+        .subtract(40 + attempt * 60, 'minutes');
+      let base_date = now.format('YYYYMMDD');
+      let base_time = now.format('HH') + '00'; // 발표 시각은 매시 00분
 
-    // 초단기실황 데이터의 업데이트는 매시 10분마다 진행됨
-    // 10분을 기준으로 이전 시간 사용 여부 결정
-    if (now.minute() < 10) {
-      // 이전 시간으로 이동
-      const previousHour = now.subtract(1, 'hour');
-      base_date = previousHour.format('YYYYMMDD'); // 이전 시간의 날짜
-      base_time = previousHour.format('HH00'); // 이전 시간의 시간
-    } else {
-      // 현재 시간 사용
-      base_date = now.format('YYYYMMDD');
-      base_time = now.format('HH00');
+      // 만약 시간이 음수가 되면, 날짜를 하루 전으로 변경하고 시간을 23시로 설정
+      if (now.hour() < 0) {
+        now = now.subtract(1, 'day').hour(23);
+        base_date = now.format('YYYYMMDD');
+        base_time = '2300';
+      }
+
+      console.log(`Attempt ${attempt + 1}: base_date=${base_date}, base_time=${base_time}`);
+
+      const response = await dataPortalApiClient.get('/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst', {
+        params: {
+          pageNo: 1,
+          numOfRows: 1000, // 데이터 양을 늘려보기
+          dataType: 'JSON',
+          base_date,
+          base_time,
+          nx,
+          ny,
+        },
+      });
+
+      console.log('Full API Response:', JSON.stringify(response.data, null, 2));
+      console.log('API Response Header:', response.data.response.header);
+
+      const resultCode = response.data.response.header.resultCode;
+      const resultMsg = response.data.response.header.resultMsg;
+
+      if (resultCode === '00') {
+        // 정상 응답
+        const items = response.data.response.body.items.item;
+
+        if (!items || items.length === 0) {
+          throw new WeatherException(WEATHER_ERROR_CODE.NO_DATA_FOUND);
+        }
+
+        const temperature = parseFloat(items.find((item: any) => item.category === 'T1H')?.obsrValue || '0');
+        const condition = parseInt(items.find((item: any) => item.category === 'PTY')?.obsrValue || '0', 10);
+        const windSpeed = parseFloat(items.find((item: any) => item.category === 'WSD')?.obsrValue || '0');
+
+        weatherData = new WeatherDTO({
+          temperature,
+          condition,
+          windSpeed,
+        });
+
+        console.log(`Weather Data Retrieved: ${JSON.stringify(weatherData)}`);
+      } else if (resultCode === '03') {
+        // NO_DATA 응답일 경우, 재시도
+        console.warn(`NO_DATA received. Retrying with earlier time...`);
+        attempt += 1;
+      } else {
+        // 다른 에러 코드일 경우, 예외 던지기
+        console.error(`API Error: ${resultMsg} (Code: ${resultCode})`);
+        throw new WeatherException(WEATHER_ERROR_CODE.FETCH_FAILED);
+      }
+    } catch (error) {
+      console.error(`Attempt ${attempt + 1} failed:`, error);
+
+      if (error instanceof WeatherException && error === WEATHER_ERROR_CODE.NO_DATA_FOUND) {
+        // 'NO_DATA_FOUND' 에러일 경우, 재시도
+        attempt += 1;
+      } else {
+        // 다른 에러일 경우, 재시도하지 않고 종료
+        throw error;
+      }
     }
-
-    console.log(base_date);
-    console.log(base_time);
-
-    const start = Date.now();
-    const response = await dataPortalApiClient.get('/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst', {
-      params: {
-        pageNo: 1,
-        numOfRows: 10,
-        dataType: 'JSON',
-        base_date,
-        base_time,
-        nx,
-        ny,
-      },
-    });
-    console.log('weather API call took:', Date.now() - start, 'ms');
-
-    console.log(response.data);
-
-    if (!response.data.response.body.items || response.data.response.body.items.length === 0) {
-      throw new WeatherException(WEATHER_ERROR_CODE.NO_DATA_FOUND);
-    }
-
-    const weatherData = response.data.response.body.items.item;
-    const temperature = parseFloat(weatherData.find((item) => item.category === 'T1H')?.obsrValue);
-    const condition = parseInt(weatherData.find((item) => item.category === 'PTY')?.obsrValue, 10);
-    const windSpeed = parseFloat(weatherData.find((item) => item.category === 'WSD')?.obsrValue);
-
-    return new WeatherDTO({
-      temperature,
-      condition,
-      windSpeed,
-    });
-  } catch (error) {
-    console.error('Error fetching weather data:', error);
-    throw new WeatherException(WEATHER_ERROR_CODE.FETCH_FAILED);
   }
+
+  if (!weatherData) {
+    throw new WeatherException(WEATHER_ERROR_CODE.NO_DATA_FOUND);
+  }
+
+  return weatherData;
 };
