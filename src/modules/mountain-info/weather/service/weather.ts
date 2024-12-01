@@ -46,55 +46,86 @@ const convertToGrid = (lat: number, lon: number): { nx: number; ny: number } => 
 };
 
 /**
+ * 기상청 API 응답 인터페이스 정의
+ */
+interface ApiResponseHeader {
+  resultCode: string;
+  resultMsg: string;
+}
+
+interface ApiResponseBody {
+  baseDate: string;
+  baseTime: string;
+  items: {
+    item: Array<{
+      category: string;
+      obsrValue: string;
+    }>;
+  };
+}
+
+interface ApiResponseData {
+  response: {
+    header: ApiResponseHeader;
+    body: ApiResponseBody;
+  };
+}
+
+/**
  * 기상청 API를 호출하여 날씨 정보를 가져오는 함수
  * @param lat 위도
  * @param lon 경도
  * @returns WeatherDTO
  */
 export const getWeatherAlert = async (lat: number, lon: number): Promise<WeatherDTO> => {
-  const maxRetries = 6; // 최대 6회 재시도 (6시간 전까지)
-  let attempt = 0;
-  let weatherData: WeatherDTO | null = null;
+  const maxRetries = 24; // 최대 24회 시도
 
   // 격자 좌표 변환
   const { nx, ny } = convertToGrid(lat, lon);
   console.log(`lat=${lat}, lon=${lon}, nx=${nx}, ny=${ny}`);
 
-  while (attempt < maxRetries && !weatherData) {
+  // 모든 시도에 대한 base_date와 base_time 계산
+  const requestTimes = Array.from({ length: maxRetries }, (_, index) => {
+    // 현재 시각 기준으로 10분 + 60분 * attempt 이전의 시각을 사용
+    const time = moment()
+      .tz('Asia/Seoul')
+      .subtract(10 + index * 60, 'minutes');
+    const base_date = time.format('YYYYMMDD');
+    const base_time = time.format('HH') + '00'; // 발표 시각은 매시 00분
+
+    return { base_date, base_time };
+  });
+
+  console.log(requestTimes);
+
+  /**
+   * 단일 API 요청을 수행하고 WeatherDTO를 반환하는 헬퍼 함수
+   * @param base_date API 요청 기준 날짜
+   * @param base_time API 요청 기준 시간
+   * @returns WeatherDTO
+   * @throws WeatherException
+   */
+  const fetchWeather = async (base_date: string, base_time: string): Promise<WeatherDTO> => {
     try {
-      // 현재 시각 기준으로 40분 + 60분 * attempt 이전의 시각을 사용
-      let now = moment()
-        .tz('Asia/Seoul')
-        .subtract(40 + attempt * 60, 'minutes');
-      let base_date = now.format('YYYYMMDD');
-      let base_time = now.format('HH') + '00'; // 발표 시각은 매시 00분
-
-      // 만약 시간이 음수가 되면, 날짜를 하루 전으로 변경하고 시간을 23시로 설정
-      if (now.hour() < 0) {
-        now = now.subtract(1, 'day').hour(23);
-        base_date = now.format('YYYYMMDD');
-        base_time = '2300';
-      }
-
-      console.log(`Attempt ${attempt + 1}: base_date=${base_date}, base_time=${base_time}`);
-
-      const response = await dataPortalApiClient.get('/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst', {
-        params: {
-          pageNo: 1,
-          numOfRows: 1000, // 데이터 양을 늘려보기
-          dataType: 'JSON',
-          base_date,
-          base_time,
-          nx,
-          ny,
-        },
-      });
+      const response = await dataPortalApiClient.get<ApiResponseData>(
+        '/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst',
+        {
+          params: {
+            pageNo: 1,
+            numOfRows: 10, // 데이터 양을 줄여보기 (테스트용)
+            dataType: 'JSON',
+            base_date,
+            base_time,
+            nx,
+            ny,
+          },
+        }
+      );
 
       console.log('Full API Response:', JSON.stringify(response.data, null, 2));
       console.log('API Response Header:', response.data.response.header);
 
-      const resultCode = response.data.response.header.resultCode;
-      const resultMsg = response.data.response.header.resultMsg;
+      const { resultCode, resultMsg } = response.data.response.header;
 
       if (resultCode === '00') {
         // 정상 응답
@@ -104,42 +135,39 @@ export const getWeatherAlert = async (lat: number, lon: number): Promise<Weather
           throw new WeatherException(WEATHER_ERROR_CODE.NO_DATA_FOUND);
         }
 
-        const temperature = parseFloat(items.find((item: any) => item.category === 'T1H')?.obsrValue || '0');
-        const condition = parseInt(items.find((item: any) => item.category === 'PTY')?.obsrValue || '0', 10);
-        const windSpeed = parseFloat(items.find((item: any) => item.category === 'WSD')?.obsrValue || '0');
+        const temperature = parseFloat(items.find((item) => item.category === 'T1H')?.obsrValue || '0');
+        const condition = parseInt(items.find((item) => item.category === 'PTY')?.obsrValue || '0', 10);
+        const windSpeed = parseFloat(items.find((item) => item.category === 'WSD')?.obsrValue || '0');
 
-        weatherData = new WeatherDTO({
+        const weatherData = new WeatherDTO({
           temperature,
           condition,
           windSpeed,
         });
 
         console.log(`Weather Data Retrieved: ${JSON.stringify(weatherData)}`);
-      } else if (resultCode === '03') {
-        // NO_DATA 응답일 경우, 재시도
-        console.warn(`NO_DATA received. Retrying with earlier time...`);
-        attempt += 1;
+
+        return weatherData;
       } else {
-        // 다른 에러 코드일 경우, 예외 던지기
-        console.error(`API Error: ${resultMsg} (Code: ${resultCode})`);
-        throw new WeatherException(WEATHER_ERROR_CODE.FETCH_FAILED);
+        // 에러 코드가 있는 경우, 실패로 간주
+        throw new Error(`API Error: ${resultMsg} (Code: ${resultCode})`);
       }
     } catch (error) {
-      console.error(`Attempt ${attempt + 1} failed:`, error);
-
-      if (error instanceof WeatherException && error === WEATHER_ERROR_CODE.NO_DATA_FOUND) {
-        // 'NO_DATA_FOUND' 에러일 경우, 재시도
-        attempt += 1;
-      } else {
-        // 다른 에러일 경우, 재시도하지 않고 종료
-        throw error;
-      }
+      console.error(`API request failed for base_date=${base_date}, base_time=${base_time}:`, error);
+      throw error;
     }
-  }
+  };
 
-  if (!weatherData) {
-    throw new WeatherException(WEATHER_ERROR_CODE.NO_DATA_FOUND);
-  }
+  // 모든 API 요청을 비동기적으로 실행
+  const apiPromises = requestTimes.map(({ base_date, base_time }) => fetchWeather(base_date, base_time));
 
-  return weatherData;
+  try {
+    // Promise.any을 사용하여 가장 먼저 성공한 응답을 반환
+    const firstSuccess = await Promise.any(apiPromises);
+
+    return firstSuccess;
+  } catch (aggregateError) {
+    console.error('All API attempts failed:', aggregateError);
+    throw new WeatherException(WEATHER_ERROR_CODE.FETCH_FAILED);
+  }
 };
