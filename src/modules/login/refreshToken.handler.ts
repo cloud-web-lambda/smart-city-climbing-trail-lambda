@@ -51,7 +51,18 @@ export const handler = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
-    if (error.name) await mapCognitoError(error);
+    if (error instanceof LoginException) {
+      return {
+        statusCode: error.status,
+        body: JSON.stringify(error),
+      };
+    }
+
+    mapCognitoError(error);
+    return {
+      statusCode: error.status,
+      body: JSON.stringify(error),
+    };
   }
 };
 

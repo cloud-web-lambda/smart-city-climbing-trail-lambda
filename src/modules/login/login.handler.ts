@@ -35,11 +35,17 @@ export const handler = async (event) => {
     };
   } catch (error) {
     if (error instanceof LoginException) {
-      throw error;
+      return {
+        statusCode: error.status,
+        body: JSON.stringify(error),
+      };
     }
 
     mapCognitoError(error);
-    throw error;
+    return {
+      statusCode: error.status,
+      body: JSON.stringify(error),
+    };
   }
 };
 
@@ -75,10 +81,16 @@ export async function login({
     };
   } catch (error) {
     if (error instanceof LoginException) {
-      throw error;
+      return {
+        statusCode: error.status,
+        body: JSON.stringify(error),
+      };
     }
 
     mapCognitoError(error);
-    throw error;
+    return {
+      statusCode: error.status,
+      body: JSON.stringify(error),
+    };
   }
 }

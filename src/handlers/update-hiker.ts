@@ -15,10 +15,6 @@ export { handler } from '@/modules/mypage/update-hiker.handler';
  *           schema:
  *             type: object
  *             properties:
- *               sub:
- *                 type: string
- *                 description: The unique identifier of the user (e.g., user1).
- *                 example: "user1"
  *               weight:
  *                 type: integer
  *                 description: The weight of the hiker (in kilograms).

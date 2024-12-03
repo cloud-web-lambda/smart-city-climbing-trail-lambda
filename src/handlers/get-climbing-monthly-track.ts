@@ -9,13 +9,6 @@ export { handler } from '@/modules/record/get-climbing-monthly-track.handler';
  *       [등산기록 조회 페이지]
  *       - year, month로 사용자의 등산기록을 조회합니다.
  *     parameters:
- *       - name: sub
- *         in: path
- *         description: The unique identifier for the user (e.g., user1).
- *         required: true
- *         schema:
- *           type: string
- *           example: "user1"
  *     responses:
  *       200:
  *         description: Successfully retrieved monthly climbing statistics

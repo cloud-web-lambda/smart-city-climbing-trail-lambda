@@ -6,9 +6,24 @@ import { createGatewayHandler } from '@/lambda';
 import connectDB from '@/utils/dbClient';
 import { ERROR_CODE } from './exception/error-code';
 import { ClimbingTrackException } from './exception/climbing-track.exception';
+import { LoginException } from '../login/exception/login.exception';
+import { getSubFromAccessToken } from '@/utils/getSub';
 
 export const handler = createGatewayHandler<ClimbingTrackDTO>(async (req, res) => {
-  const { sub } = req.params as { sub: string };
+  const authorizationHeader = req.headers?.Authorization || req.headers?.authorization;
+
+  if (!authorizationHeader) {
+    throw new LoginException(ERROR_CODE.MISSING_REQUIRED_PARAM);
+  }
+
+  const accessToken = authorizationHeader.split(' ')[1];
+
+  if (!accessToken) {
+    throw new LoginException(ERROR_CODE.MISSING_REQUIRED_PARAM);
+  }
+
+  const sub = await getSubFromAccessToken(accessToken);
+
   if (!sub) {
     throw new ClimbingTrackException(ERROR_CODE.MISSING_REQUIRED_PARAM);
   }

@@ -112,21 +112,21 @@ functions:
     handler: ./src/handlers/get-climbing-monthly-track.handler
     events:
       - httpApi:
-          path: /climbing/monthly-track/{sub}
+          path: /climbing/monthly-track
           method: GET
 
   get-climbing-track-handler:
     handler: ./src/handlers/get-climbing-track.handler
     events:
       - httpApi:
-          path: /climbing/track/{sub}
+          path: /climbing/track
           method: GET
 
   update-climbing-track-handler:
     handler: ./src/handlers/update-climbing-track.handler
     events:
       - httpApi:
-          path: /climbing/track/{sub}
+          path: /climbing/track
           method: POST
 
   sign-up-handler:
@@ -167,7 +167,7 @@ functions:
     events:
       - httpApi:
           path: /access
-          method: POST
+          method: GET
 
   mountain-info-handler:
     handler: ./src/handlers/mountain-info.handler
