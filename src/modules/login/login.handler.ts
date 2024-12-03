@@ -34,7 +34,6 @@ export const handler = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
-    
     if (error instanceof LoginException) {
       return {
         statusCode: error.status,

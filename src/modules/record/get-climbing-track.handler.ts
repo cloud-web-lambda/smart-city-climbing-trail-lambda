@@ -7,10 +7,9 @@ import { ERROR_CODE } from './exception/error-code';
 import { ClimbingTrackException } from './exception/climbing-track.exception';
 import connectDB from '@/utils/dbClient';
 import { LoginException } from '../login/exception/login.exception';
-import { getSubFromAccessToken} from "@/utils/getSub";
+import { getSubFromAccessToken } from '@/utils/getSub';
 
 export const handler = createGatewayHandler<ClimbingTotalDTO>(async (req, res) => {
-
   const authorizationHeader = req.headers?.Authorization || req.headers?.authorization;
 
   if (!authorizationHeader) {

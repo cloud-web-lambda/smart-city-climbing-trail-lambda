@@ -6,11 +6,10 @@ import { ERROR_CODE } from './exception/error-code';
 import connectDB from '@/utils/dbClient';
 import HikerInfo from './dto/hikerInfo';
 import { LoginException } from '../login/exception/login.exception';
-import { getSubFromAccessToken} from "@/utils/getSub";
+import { getSubFromAccessToken } from '@/utils/getSub';
 
 // 몸무게 업데이트 기능
 export const handler = createGatewayHandler<hikerDTO>(async (req, res) => {
-
   const authorizationHeader = req.headers?.Authorization || req.headers?.authorization;
 
   if (!authorizationHeader) {
