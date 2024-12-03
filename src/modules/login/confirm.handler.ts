@@ -1,6 +1,9 @@
 import { CognitoIdentityProviderClient, ConfirmSignUpCommand } from '@aws-sdk/client-cognito-identity-provider';
 import * as crypto from 'crypto';
 import env from '@/config';
+import { LoginException } from './exception/login.exception';
+import { ERROR_CODE } from './exception/error-code';
+import { mapCognitoError } from './dto/cognito-error.dto';
 
 function getSecretHash(username: string, clientId: string, clientSecret: string) {
   const hmac = crypto.createHmac('sha256', clientSecret);
@@ -13,7 +16,7 @@ export const handler = async (event) => {
     const body = JSON.parse(event.body || '{}');
 
     if (!body.confirmationCode) {
-      throw new Error('confirmationCode is required');
+      throw new LoginException(ERROR_CODE.MISSING_CONFIRMATIONCODE);
     }
 
     const { confirmationCode, sub } = body;
@@ -31,13 +34,12 @@ export const handler = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: error.message || '보안코드 인증 처리에 실패했습니다.',
-        error: error,
-      }),
-    };
+    if (error instanceof LoginException) {
+      throw error;
+    }
+
+    mapCognitoError(error);
+    throw error;
   }
 };
 
@@ -55,7 +57,7 @@ export async function confirm({
 
   try {
     if (!ConfirmationCode) {
-      throw new Error('확인 코드가 제공되지 않았습니다.');
+      throw new LoginException(ERROR_CODE.MISSING_CONFIRMATIONCODE);
     }
 
     const confirmResponse = await client.send(
@@ -72,6 +74,11 @@ export async function confirm({
       confirmResponse,
     };
   } catch (error) {
-    throw new Error(`회원 가입 또는 인증 중 오류가 발생했습니다. ${(error as Error).message || JSON.stringify(error)}`);
+    if (error instanceof LoginException) {
+      throw error;
+    }
+
+    mapCognitoError(error);
+    throw error;
   }
 }

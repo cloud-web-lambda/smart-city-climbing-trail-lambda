@@ -1,42 +1,18 @@
-export enum CognitoErrorType {
-  INVALID_TOKEN = 'INVALID_TOKEN',
-  EXPIRED_TOKEN = 'EXPIRED_TOKEN',
-  REFRESH_FAILED = 'REFRESH_FAILED',
-  SIGNUP_FAILED = 'SIGNUP_FAILED',
-  UNKNOWN_ERROR = 'UNKNOWN_ERROR',
-}
+import { LoginException } from '.././exception/login.exception';
+import { ERROR_CODE } from '.././exception/error-code';
 
-export interface CognitoErrorDTO {
-  type: CognitoErrorType;
-  message: string;
-  details?: string;
-}
 
-export function mapCognitoError(error: any): CognitoErrorDTO {
+export function mapCognitoError(error: any){
   switch (error.name) {
     case 'NotAuthorizedException':
-      return {
-        type: CognitoErrorType.INVALID_TOKEN,
-        message: '인증되지 않은 토큰입니다.',
-        details: error.message,
-      };
+      throw new LoginException(ERROR_CODE.INVALID_TOKEN)
     case 'ExpiredTokenException':
-      return {
-        type: CognitoErrorType.EXPIRED_TOKEN,
-        message: '토큰이 만료되었습니다.',
-        details: error.message,
-      };
+      throw new LoginException(ERROR_CODE.EXPIRED_TOKEN)
     case 'UserNotFoundException':
-      return {
-        type: CognitoErrorType.INVALID_TOKEN,
-        message: '사용자를 찾을 수 없습니다.',
-        details: error.message,
-      };
+        throw new LoginException(ERROR_CODE.USER_NOT_FOUND)
+    case 'ResourceNotFoundException':
+        throw new LoginException(ERROR_CODE.RESOURCE_NOT_FOUND)
     default:
-      return {
-        type: CognitoErrorType.UNKNOWN_ERROR,
-        message: '알 수 없는 오류가 발생했습니다.',
-        details: error.message,
-      };
+        throw new LoginException(ERROR_CODE.UNKNOWN_ERROR)
   }
 }

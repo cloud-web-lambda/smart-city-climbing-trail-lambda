@@ -1,13 +1,22 @@
 import { CognitoIdentityProviderClient, GetUserCommand } from '@aws-sdk/client-cognito-identity-provider';
-import { mapCognitoError, CognitoErrorDTO, CognitoErrorType } from './dto/cognito-error.dto';
+import { mapCognitoError } from './dto/cognito-error.dto';
 import env from '@/config';
+import { LoginException } from './exception/login.exception';
+import { ERROR_CODE } from './exception/error-code';
+
 
 export const handler = async (event) => {
   try {
-    const { accessToken } = JSON.parse(event.body || '{}');
+    const authorizationHeader = event.headers?.Authorization || event.headers?.authorization;
+
+    if (!authorizationHeader) {
+        throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN);
+    }
+
+    const accessToken = authorizationHeader.split(' ')[1];
 
     if (!accessToken) {
-      throw new Error('Access token is required');
+        throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN);
     }
 
     const result = await validateAccessToken(accessToken);
@@ -17,15 +26,12 @@ export const handler = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
-    const errorDto: CognitoErrorDTO = mapCognitoError(error);
-
-    return {
-      statusCode:
-        errorDto.type === CognitoErrorType.EXPIRED_TOKEN || errorDto.type === CognitoErrorType.INVALID_TOKEN
-          ? 401
-          : 400,
-      body: JSON.stringify(errorDto),
-    };
+    if (error instanceof LoginException) {
+        throw error;
+      }
+  
+    mapCognitoError(error);
+    throw error;
   }
 };
 
@@ -51,6 +57,11 @@ export async function validateAccessToken(accessToken: string): Promise<{
       isValid: true,
     };
   } catch (error) {
+    if (error instanceof LoginException) {
+        throw error;
+      }
+  
+    mapCognitoError(error);
     throw error;
   }
 }

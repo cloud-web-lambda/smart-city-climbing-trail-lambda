@@ -2,8 +2,11 @@ import {
   CognitoIdentityProviderClient,
   InitiateAuthCommand,
   AuthFlowType,
+  GetUserCommand
 } from '@aws-sdk/client-cognito-identity-provider';
-import { mapCognitoError, CognitoErrorDTO, CognitoErrorType } from './dto/cognito-error.dto';
+import { LoginException } from './exception/login.exception';
+import { ERROR_CODE } from './exception/error-code';
+import { mapCognitoError } from './dto/cognito-error.dto';
 import * as crypto from 'crypto';
 import env from '@/config';
 
@@ -18,12 +21,24 @@ export const handler = async (event) => {
     const body = JSON.parse(event.body || '{}');
 
     if (!body.refreshToken || !body.email) {
-      throw new Error('Refresh token and email are required');
+      throw new LoginException(ERROR_CODE.MISSING_REFRESH_TOKEN_OR_EMAIL);
     }
 
+    const authorizationHeader = event.headers?.Authorization || event.headers?.authorization;
+
+    if (!authorizationHeader) {
+      throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN);
+    }
+
+    const accessToken = authorizationHeader.split(' ')[1];
+
+    if (!accessToken) {
+      throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN);
+    }
+
+    const sub = await getSubFromAccessToken(accessToken);
     const { email, refreshToken } = body;
-    const clientId = env.CLIENT_ID;
-    const secretHash = getSecretHash(email, clientId, env.CLIENT_SECRET);
+    const secretHash = getSecretHash(sub, env.CLIENT_ID, env.CLIENT_SECRET);
 
     const result = await refreshTokens({
       Email: email,
@@ -36,15 +51,8 @@ export const handler = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
-    const errorDto: CognitoErrorDTO = mapCognitoError(error);
-
-    return {
-      statusCode:
-        errorDto.type === CognitoErrorType.EXPIRED_TOKEN || errorDto.type === CognitoErrorType.INVALID_TOKEN
-          ? 401
-          : 400,
-      body: JSON.stringify(errorDto),
-    };
+    if(error.name)
+    await mapCognitoError(error);
   }
 };
 
@@ -82,6 +90,34 @@ export async function refreshTokens({
       refreshToken: response.AuthenticationResult?.RefreshToken || RefreshToken,
     };
   } catch (error) {
+    if (error instanceof LoginException) {
+      throw error;
+    }
+
+    mapCognitoError(error);
+    throw error;
+  }
+}
+
+async function getSubFromAccessToken(accessToken: string): Promise<string> {
+  const client = new CognitoIdentityProviderClient({ region: env.REGION });
+
+  const command = new GetUserCommand({
+    AccessToken: accessToken
+  });
+
+  try {
+    const response = await client.send(command);
+    const userAttributes = response.UserAttributes || [];
+    
+    const sub = userAttributes.find(attr => attr.Name === 'sub')?.Value || '';
+    return sub;
+  } catch (error) {
+    if (error instanceof LoginException) {
+      throw error;
+    }
+
+    mapCognitoError(error);
     throw error;
   }
 }
