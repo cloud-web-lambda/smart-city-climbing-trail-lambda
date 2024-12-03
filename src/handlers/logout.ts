@@ -38,4 +38,3 @@ export { handler } from '@/modules/login/logout.handler';
  *   - "'/sign-in' 엔드포인트에 대한 예시 요청: {\"email\": \"your-email@example.com\", \"password\": \"yourPassword123\"}"
  *   - "로그인 후 응답에서 액세스 토큰을 받게 되며, 이를 'Authorization' 헤더에 사용하여 이 엔드포인트를 호출합니다."
  */
-

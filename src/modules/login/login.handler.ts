@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import env from '@/config';
 import { LoginException } from './exception/login.exception';
 import { ERROR_CODE } from './exception/error-code';
-import { mapCognitoError } from './dto/cognito-error.dto';
+import { mapCognitoError } from './service/cognito-error.service';
 
 function getSecretHash(username: string, clientId: string, clientSecret: string) {
   const hmac = crypto.createHmac('sha256', clientSecret);
@@ -16,7 +16,7 @@ export const handler = async (event) => {
     const body = JSON.parse(event.body || '{}');
 
     if (!body.email || !body.password) {
-      throw new LoginException(ERROR_CODE.MISSING_EMAIL_OR_PASSWORD)
+      throw new LoginException(ERROR_CODE.MISSING_EMAIL_OR_PASSWORD);
     }
 
     const { email, password } = body;

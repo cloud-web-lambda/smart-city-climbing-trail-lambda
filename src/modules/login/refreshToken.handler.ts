@@ -2,11 +2,11 @@ import {
   CognitoIdentityProviderClient,
   InitiateAuthCommand,
   AuthFlowType,
-  GetUserCommand
+  GetUserCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { LoginException } from './exception/login.exception';
 import { ERROR_CODE } from './exception/error-code';
-import { mapCognitoError } from './dto/cognito-error.dto';
+import { mapCognitoError } from './service/cognito-error.service';
 import * as crypto from 'crypto';
 import env from '@/config';
 
@@ -51,8 +51,7 @@ export const handler = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
-    if(error.name)
-    await mapCognitoError(error);
+    if (error.name) await mapCognitoError(error);
   }
 };
 
@@ -103,14 +102,14 @@ async function getSubFromAccessToken(accessToken: string): Promise<string> {
   const client = new CognitoIdentityProviderClient({ region: env.REGION });
 
   const command = new GetUserCommand({
-    AccessToken: accessToken
+    AccessToken: accessToken,
   });
 
   try {
     const response = await client.send(command);
     const userAttributes = response.UserAttributes || [];
-    
-    const sub = userAttributes.find(attr => attr.Name === 'sub')?.Value || '';
+
+    const sub = userAttributes.find((attr) => attr.Name === 'sub')?.Value || '';
     return sub;
   } catch (error) {
     if (error instanceof LoginException) {

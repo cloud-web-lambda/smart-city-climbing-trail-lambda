@@ -12,7 +12,7 @@ export const ERROR_MESSAGE = {
   EXPIRED_TOKEN: '토큰이 만료되었습니다.',
   UNKNOWN_ERROR: '알 수 없는 오류가 발생했습니다.',
   RESOURCE_NOT_FOUND: '지정된 리소스가 존재하지 않습니다.',
-  MISSING_CONFIRMATIONCODE: '검증 코드가 누락되었습니다.'
+  MISSING_CONFIRMATIONCODE: '검증 코드가 누락되었습니다.',
 };
 
 export const ERROR_CODE: ErrorCodeMapper<typeof ERROR_MESSAGE> = {

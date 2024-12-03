@@ -60,4 +60,3 @@ export { handler } from '@/modules/login/confirm.handler';
  *       500:
  *         description: 서버 내부 오류
  */
-

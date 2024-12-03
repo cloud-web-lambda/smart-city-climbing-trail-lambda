@@ -6,8 +6,7 @@ import {
 import env from '@/config';
 import { LoginException } from './exception/login.exception';
 import { ERROR_CODE } from './exception/error-code';
-import { mapCognitoError } from './dto/cognito-error.dto';
-
+import { mapCognitoError } from './service/cognito-error.service';
 
 export const handler = async (event) => {
   const client = new CognitoIdentityProviderClient({ region: env.REGION });
@@ -16,13 +15,13 @@ export const handler = async (event) => {
     const authorizationHeader = event.headers?.Authorization || event.headers?.authorization;
 
     if (!authorizationHeader) {
-      throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN)
+      throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN);
     }
 
     const accessToken = authorizationHeader.startsWith('Bearer ') ? authorizationHeader.slice(7) : authorizationHeader;
 
     if (!accessToken) {
-      throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN)
+      throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN);
     }
 
     // GlobalSignOutCommand를 사용하여 모든 세션 로그아웃 처리
