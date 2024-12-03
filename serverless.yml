@@ -156,6 +156,18 @@ functions:
       - httpApi:
           path: /sign-out
           method: POST
+  refreshToken-handler:
+    handler: ./src/handlers/refreshToken.handler
+    events:
+      - httpApi:
+          path: /refresh
+          method: POST
+  accessToken-handler:
+    handler: ./src/handlers/accessToken.handler
+    events:
+      - httpApi:
+          path: /access
+          method: POST
 
   mountain-info-handler:
     handler: ./src/handlers/mountain-info.handler

@@ -1,6 +1,9 @@
 import { CognitoIdentityProviderClient, InitiateAuthCommand } from '@aws-sdk/client-cognito-identity-provider';
 import * as crypto from 'crypto';
 import env from '@/config';
+import { LoginException } from './exception/login.exception';
+import { ERROR_CODE } from './exception/error-code';
+import { mapCognitoError } from './service/cognito-error.service';
 
 function getSecretHash(username: string, clientId: string, clientSecret: string) {
   const hmac = crypto.createHmac('sha256', clientSecret);
@@ -12,8 +15,8 @@ export const handler = async (event) => {
   try {
     const body = JSON.parse(event.body || '{}');
 
-    if (!body.email) {
-      throw new Error('Email is required');
+    if (!body.email || !body.password) {
+      throw new LoginException(ERROR_CODE.MISSING_EMAIL_OR_PASSWORD);
     }
 
     const { email, password } = body;
@@ -31,13 +34,12 @@ export const handler = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: error.message || '로그인에 실패했습니다.',
-        error: error,
-      }),
-    };
+    if (error instanceof LoginException) {
+      throw error;
+    }
+
+    mapCognitoError(error);
+    throw error;
   }
 };
 
@@ -72,6 +74,11 @@ export async function login({
       refreshToken: authResponse.AuthenticationResult?.RefreshToken,
     };
   } catch (error) {
-    throw new Error(`로그인 중 오류가 발생했습니다. ${error.message || JSON.stringify(error)}`);
+    if (error instanceof LoginException) {
+      throw error;
+    }
+
+    mapCognitoError(error);
+    throw error;
   }
 }

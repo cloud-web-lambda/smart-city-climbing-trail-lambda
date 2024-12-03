@@ -1,6 +1,5 @@
 import { HttpStatus } from '@/common/constants/http-status';
 import type { ErrorCodeMapper } from '@/common/@types/common';
-import { DIFFICULTY_KEY } from '@/modules/recommend/common/climbing-trail.common';
 
 export const ERROR_MESSAGE = {
   MISSING_REQUIRED_PARAM: '필수 파라미터가 누락되었습니다.',

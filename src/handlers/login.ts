@@ -4,7 +4,7 @@ export { handler } from '@/modules/login/login.handler';
  * @swagger
  * /sign-in:
  *   post:
- *     summary: Sign in to the application
+ *     summary: 로그인
  *     description: |
  *       [로그인 페이지]
  *       - 회원가입한 이메일과 비밀번호로 로그인합니다.
@@ -17,15 +17,15 @@ export { handler } from '@/modules/login/login.handler';
  *             properties:
  *               email:
  *                 type: string
- *                 description: User's email address
+ *                 description: 사용자의 이메일 주소
  *                 example: "pyeonk33@gmail.com"
  *               password:
  *                 type: string
- *                 description: User's password
+ *                 description: 사용자의 비밀번호
  *                 example: "Abcde12345**"
  *     responses:
  *       200:
- *         description: Successful login
+ *         description: 로그인 성공
  *         content:
  *           application/json:
  *             schema:
@@ -44,7 +44,7 @@ export { handler } from '@/modules/login/login.handler';
  *                   type: string
  *                   example: "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.XMJEOlLJJe64rUJavmyZoAlkf..."
  *       400:
- *         description: Invalid Credentials or Missing Parameters
+ *         description: 잘못된 자격 증명 또는 누락된 매개변수
  *       500:
- *         description: Internal server error
+ *         description: 서버 내부 오류
  */
