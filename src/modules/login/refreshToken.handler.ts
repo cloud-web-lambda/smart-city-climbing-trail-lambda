@@ -1,5 +1,9 @@
-import { CognitoIdentityProviderClient, InitiateAuthCommand, AuthFlowType } from '@aws-sdk/client-cognito-identity-provider';
-import { mapCognitoError, CognitoErrorDTO, CognitoErrorType } from './dto/cognito-error.dto'
+import {
+  CognitoIdentityProviderClient,
+  InitiateAuthCommand,
+  AuthFlowType,
+} from '@aws-sdk/client-cognito-identity-provider';
+import { mapCognitoError, CognitoErrorDTO, CognitoErrorType } from './dto/cognito-error.dto';
 import * as crypto from 'crypto';
 import env from '@/config';
 
@@ -33,12 +37,12 @@ export const handler = async (event) => {
     };
   } catch (error) {
     const errorDto: CognitoErrorDTO = mapCognitoError(error);
-    
+
     return {
-      statusCode: errorDto.type === CognitoErrorType.EXPIRED_TOKEN 
-        || errorDto.type === CognitoErrorType.INVALID_TOKEN 
-        ? 401 
-        : 400,
+      statusCode:
+        errorDto.type === CognitoErrorType.EXPIRED_TOKEN || errorDto.type === CognitoErrorType.INVALID_TOKEN
+          ? 401
+          : 400,
       body: JSON.stringify(errorDto),
     };
   }
@@ -52,10 +56,10 @@ export async function refreshTokens({
   Email: string;
   RefreshToken: string;
   secretHash: string;
-}): Promise<{ 
-  accessToken: string; 
-  idToken: string; 
-  refreshToken: string 
+}): Promise<{
+  accessToken: string;
+  idToken: string;
+  refreshToken: string;
 }> {
   const client = new CognitoIdentityProviderClient({ region: env.REGION });
 
@@ -71,7 +75,7 @@ export async function refreshTokens({
 
   try {
     const response = await client.send(command);
-    
+
     return {
       accessToken: response.AuthenticationResult?.AccessToken || '',
       idToken: response.AuthenticationResult?.IdToken || '',

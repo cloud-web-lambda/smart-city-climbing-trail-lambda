@@ -1,1 +1,1 @@
-export { handler } from '@/modules/login/accessToken.handler'
+export { handler } from '@/modules/login/accessToken.handler';

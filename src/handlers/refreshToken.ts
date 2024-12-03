@@ -1,1 +1,1 @@
-export { handler } from '@/modules/login/refreshToken.handler'
+export { handler } from '@/modules/login/refreshToken.handler';
