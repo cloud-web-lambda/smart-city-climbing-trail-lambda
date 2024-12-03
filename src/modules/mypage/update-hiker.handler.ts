@@ -13,18 +13,18 @@ export const handler = createGatewayHandler<hikerDTO>(async (req, res) => {
   const authorizationHeader = req.headers?.Authorization || req.headers?.authorization;
 
   if (!authorizationHeader) {
-    throw new LoginException(ERROR_CODE.MISSING_REQUIRED_PARAM);
+    throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN);
   }
 
   const accessToken = authorizationHeader.split(' ')[1];
 
   if (!accessToken) {
-    throw new LoginException(ERROR_CODE.MISSING_REQUIRED_PARAM);
+    throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN);
   }
 
   const sub = await getSubFromAccessToken(accessToken);
 
-  if (!sub) throw new HikerException(ERROR_CODE.MISSING_REQUIRED_PARAM);
+  if (!sub) throw new HikerException(ERROR_CODE.MISSING_ACCESS_TOKEN);
 
   const { weight } = req.body as { weight: number };
 
