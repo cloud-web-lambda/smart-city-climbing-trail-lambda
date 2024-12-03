@@ -5,12 +5,25 @@ import { HikerException } from './exception/hiker.exception';
 import { ERROR_CODE } from './exception/error-code';
 import connectDB from '@/utils/dbClient';
 import HikerInfo from './dto/hikerInfo';
+import { LoginException } from '../login/exception/login.exception';
+import { getSubFromAccessToken} from "@/utils/getSub";
 
 // 몸무게 조회 기능
 export const handler = createGatewayHandler<hikerDTO>(async (req, res) => {
-  const { query } = req;
+  
+  const authorizationHeader = req.headers?.Authorization || req.headers?.authorization;
 
-  const { sub } = req.query as { sub: string }; // param으로 바꿀지 고민
+  if (!authorizationHeader) {
+    throw new LoginException(ERROR_CODE.MISSING_REQUIRED_PARAM);
+  }
+
+  const accessToken = authorizationHeader.split(' ')[1];
+
+  if (!accessToken) {
+    throw new LoginException(ERROR_CODE.MISSING_REQUIRED_PARAM);
+  }
+
+  const sub = await getSubFromAccessToken(accessToken);
 
   if (!sub) throw new HikerException(ERROR_CODE.MISSING_REQUIRED_PARAM);
 

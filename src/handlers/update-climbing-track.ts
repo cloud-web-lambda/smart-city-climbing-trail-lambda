@@ -9,13 +9,6 @@ export { handler } from '@/modules/record/update-climbing-track.handler';
  *       [등산기록 저장 페이지]
  *       - 사용자의 등산기록을 저장합니다.
  *     parameters:
- *       - name: sub
- *         in: path
- *         description: The unique identifier for the user (e.g., user1).
- *         required: true
- *         schema:
- *           type: string
- *           example: "user1"
  *     requestBody:
  *       required: true
  *       content:

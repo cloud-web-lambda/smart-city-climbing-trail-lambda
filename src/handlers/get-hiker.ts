@@ -9,13 +9,6 @@ export { handler } from '@/modules/mypage/get-hiker.handler';
  *       [마이 페이지]
  *       - 등산객의 신체정보(몸무게)를 조회합니다.
  *     parameters:
- *       - name: sub
- *         in: query
- *         description: The unique identifier of the user (e.g., user1).
- *         required: true
- *         schema:
- *           type: string
- *           example: "user1"
  *     responses:
  *       200:
  *         description: Successfully fetched hiker details
@@ -31,7 +24,7 @@ export { handler } from '@/modules/mypage/get-hiker.handler';
  *                   type: integer
  *                   example: 68
  *       400:
- *         description: Invalid subS
+ *         description: Invalid sub
  *       500:
  *         description: Internal server error
  */

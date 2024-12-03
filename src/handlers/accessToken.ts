@@ -3,7 +3,7 @@ export { handler } from '@/modules/login/accessToken.handler';
 /**
  * @swagger
  * /access:
- *   post:
+ *   get:
  *     summary: 액세스 토큰을 검증하고 사용자 정보를 반환
  *     description: |
  *       이 API는 헤더에 전달된 액세스 토큰을 검증하고 사용자 정보를 반환합니다.
