@@ -8,16 +8,6 @@ export { handler } from '@/modules/login/refreshToken.handler';
  *     description: |
  *       이 API는 헤더에 전달된 액세스 토큰을 검증하고, 요청 본문에 포함된 리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급합니다.
  *       - 사용자 정보로는 `username`, `email`, `isValid` 상태가 포함됩니다.
- *     security:
- *       - Bearer: []
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         description: 인증을 위한 Bearer 액세스 토큰
- *         required: true
- *         schema:
- *           type: string
- *           example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *     requestBody:
  *       description: 리프레시 토큰을 포함한 사용자 정보
  *       required: true
@@ -32,7 +22,7 @@ export { handler } from '@/modules/login/refreshToken.handler';
  *                 example: "pyeonk33@gmail.com"
  *               accessToken:
  *                 type: string
- *                 description: 사용자의 리프레시 토큰
+ *                 description: 사용자의 액세스 토큰
  *                 example: "eyJjdHkiOiJKV1QiLCJlbmMik0Ne5ZFhqw"
  *               refreshToken:
  *                 type: string
