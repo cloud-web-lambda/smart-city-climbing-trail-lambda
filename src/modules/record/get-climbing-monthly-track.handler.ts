@@ -50,11 +50,11 @@ export const handler = createGatewayHandler<ClimbingTotalDTO>(async (req, res) =
     tracks: {
       $elemMatch: {
         startDate: {
-          $gte: startOfMonth,  // 해당 월의 첫 번째 날 이후
-          $lt: endOfMonth      // 해당 월의 마지막 날 이전
-        }
-      }
-    }
+          $gte: startOfMonth, // 해당 월의 첫 번째 날 이후
+          $lt: endOfMonth, // 해당 월의 마지막 날 이전
+        },
+      },
+    },
   }).exec();
 
   // 클라이밍 기록이 없으면 NotFoundError 반환
