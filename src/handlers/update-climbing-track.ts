@@ -2,7 +2,7 @@ export { handler } from '@/modules/record/update-climbing-track.handler';
 
 /**
  * @swagger
- * /climbing/track/{sub}:
+ * /climbing/track:
  *   post:
  *     summary: Add a new climbing track entry for a user
  *     description: |

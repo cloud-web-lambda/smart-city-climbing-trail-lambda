@@ -2,7 +2,7 @@ export { handler } from '@/modules/record/get-climbing-track.handler';
 
 /**
  * @swagger
- * /climbing/track/{sub}:
+ * /climbing/track:
  *   get:
  *     summary: Get monthly climbing track for a specific user
  *     description: |
