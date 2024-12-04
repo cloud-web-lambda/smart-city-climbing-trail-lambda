@@ -24,13 +24,7 @@ export const handler = async (event) => {
       throw new LoginException(ERROR_CODE.MISSING_REFRESH_TOKEN_OR_EMAIL);
     }
 
-    const authorizationHeader = event.headers?.Authorization || event.headers?.authorization;
-
-    if (!authorizationHeader) {
-      throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN);
-    }
-
-    const accessToken = authorizationHeader.split(' ')[1];
+    const accessToken = body.accessToken;
 
     if (!accessToken) {
       throw new LoginException(ERROR_CODE.MISSING_ACCESS_TOKEN);

@@ -8,22 +8,8 @@ export { handler } from '@/modules/login/logout.handler';
  *     description: |
  *       [로그인 페이지]
  *       - 사용자의 액세스 토큰으로 현재 세션에 대해 종료합니다.
- *     security:
+ *     security:  
  *       - bearerAuth: []
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *         description: 인증을 위한 Bearer 액세스 토큰
- *         example: "Bearer eyJraWQiOiJoQzJzRUtzb0VyengxVlk5T1JcL3U4ZnZnYjZnSEJkcFc4MjVhNzNcLyt2V2M9IiwiYWxnIjoiUlMyNTYifQ..."
- *     components:
- *       securitySchemes:
- *         bearerAuth:
- *           type: http
- *           scheme: bearer
- *           bearerFormat: JWT
  *     responses:
  *       200:
  *         description: 모든 세션에서 성공적으로 로그아웃됨
