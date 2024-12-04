@@ -2,13 +2,29 @@ export { handler } from '@/modules/record/get-climbing-monthly-track.handler';
 
 /**
  * @swagger
- * /climbing/monthly-track/{sub}:
+ * /climbing/monthly-track:
  *   get:
  *     summary: Get monthly climbing track for a specific user
  *     description: |
  *       [등산기록 조회 페이지]
  *       - year, month로 사용자의 등산기록을 조회합니다.
  *     parameters:
+ *       - in: query
+ *         name: year
+ *         required: true
+ *         description: The year for which to retrieve climbing statistics
+ *         schema:
+ *           type: integer
+ *           example: 2024
+ *       - in: query
+ *         name: month
+ *         required: true
+ *         description: The month (1-12) for which to retrieve climbing statistics
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 12
+ *           example: 5
  *     responses:
  *       200:
  *         description: Successfully retrieved monthly climbing statistics
@@ -49,7 +65,7 @@ export { handler } from '@/modules/record/get-climbing-monthly-track.handler';
  *                     example: "백두산"
  *                   example: ["백두산", "북한산"]  # 배열 형태로 예시 제공
  *       400:
- *         description: Missing parameter
+ *         description: Missing or invalid parameters
  *       500:
  *         description: Internal server error
  */
