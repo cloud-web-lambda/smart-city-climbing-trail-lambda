@@ -14,7 +14,7 @@ export const ERROR_CODE: ErrorCodeMapper<typeof ERROR_MESSAGE> = {
     message: ERROR_MESSAGE.MISSING_REQUIRED_PARAM,
   },
   NOT_FOUND: {
-    status: HttpStatus.BAD_REQUEST,
+    status: HttpStatus.NOT_FOUND,
     message: ERROR_MESSAGE.NOT_FOUND,
   },
   NOT_FORMAT: {

@@ -14,7 +14,7 @@ const swaggerOptions: swaggerJSDoc.Options = {
         description: 'Development Environment',
       },
       {
-        url: 'http://localhost:3000',
+        url: 'http://localhost:8000',
         description: 'Local Development Server',
       },
     ],
