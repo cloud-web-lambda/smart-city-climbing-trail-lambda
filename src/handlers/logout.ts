@@ -8,7 +8,7 @@ export { handler } from '@/modules/login/logout.handler';
  *     description: |
  *       [로그인 페이지]
  *       - 사용자의 액세스 토큰으로 현재 세션에 대해 종료합니다.
- *     security:  
+ *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
