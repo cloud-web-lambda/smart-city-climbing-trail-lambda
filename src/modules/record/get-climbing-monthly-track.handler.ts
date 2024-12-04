@@ -53,10 +53,7 @@ export const handler = createGatewayHandler<ClimbingTotalDTO>(async (req, res) =
 
   const monthlyClimbingTracks = userClimbingTrack.tracks.filter((track) => {
     const trackDate = dayjs(track.startDate);
-    return (
-      trackDate.year() === Number(year) && 
-      trackDate.month() + 1 === Number(month)
-    );
+    return trackDate.year() === Number(year) && trackDate.month() + 1 === Number(month);
   });
 
   // 해당 월의 등산 기록이 없는 경우
