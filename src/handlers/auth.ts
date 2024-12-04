@@ -44,7 +44,7 @@ export { handler } from '@/modules/login/auth.handler';
  *                   type: string
  *                   example: "74d87d9c-20a1-7039-6a3d-070c869a779e"
  *       400:
- *         description: 필수 파라미터가 누락되었습니다.
+ *         description: 잘못된 요청 - 요청이 잘못되었습니다.
  *       500:
  *         description: 서버 내부 오류
  */

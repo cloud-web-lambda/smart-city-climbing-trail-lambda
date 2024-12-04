@@ -44,7 +44,7 @@ export { handler } from '@/modules/login/login.handler';
  *                   type: string
  *                   example: "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.XMJEOlLJJe64rUJavmyZoAlkf..."
  *       400:
- *         description: 잘못된 자격 증명 또는 누락된 매개변수
+ *         description: 잘못된 요청 - 요청이 잘못되었습니다.
  *       500:
  *         description: 서버 내부 오류
  */

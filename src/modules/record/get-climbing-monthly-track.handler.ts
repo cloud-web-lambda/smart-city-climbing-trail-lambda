@@ -44,29 +44,23 @@ export const handler = createGatewayHandler<ClimbingTotalDTO>(async (req, res) =
   console.log('Start of month:', startOfMonth);
   console.log('End of month:', endOfMonth);
 
-  // MongoDB에서 userId(sub)와 해당 month의 클라이밍 기록 조회
-  const userMonthlyClimbingTracks = await ClimbingTrackModel.findOne({
-    sub, // userId (sub)
-    tracks: {
-      $elemMatch: {
-        startDate: { $gte: startOfMonth }, // 해당 월의 첫 번째 날 이후
-        endDate: { $lt: endOfMonth }, // 해당 월의 마지막 날 이전
-      },
-    },
-  }).exec();
+  // MongoDB에서 해당 사용자의 등산 기록 조회
+  const userClimbingTrack = await ClimbingTrackModel.findOne({ sub });
 
-  // 클라이밍 기록이 없으면 NotFoundError 반환
-  if (
-    !userMonthlyClimbingTracks ||
-    !userMonthlyClimbingTracks.tracks ||
-    userMonthlyClimbingTracks.tracks.length === 0
-  ) {
+  if (!userClimbingTrack) {
     throw new ClimbingTrackException(ERROR_CODE.NOT_FOUND);
   }
 
-  const monthlyClimbingTracks = userMonthlyClimbingTracks.tracks;
+  const monthlyClimbingTracks = userClimbingTrack.tracks.filter((track) => {
+    const trackDate = dayjs(track.startDate);
+    return trackDate.year() === Number(year) && trackDate.month() + 1 === Number(month);
+  });
 
-  // 트레일 이름 추출
+  // 해당 월의 등산 기록이 없는 경우
+  if (monthlyClimbingTracks.length === 0) {
+    throw new ClimbingTrackException(ERROR_CODE.NOT_FOUND);
+  }
+
   const trails = monthlyClimbingTracks.map((track) => track.trailName);
 
   // 총 등산 시간, 총 거리, 총 칼로리 계산
