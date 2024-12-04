@@ -30,6 +30,10 @@ export { handler } from '@/modules/login/refreshToken.handler';
  *                 type: string
  *                 description: 사용자의 이메일 주소
  *                 example: "pyeonk33@gmail.com"
+ *               accessToken:
+ *                 type: string
+ *                 description: 사용자의 리프레시 토큰
+ *                 example: "eyJjdHkiOiJKV1QiLCJlbmMik0Ne5ZFhqw"
  *               refreshToken:
  *                 type: string
  *                 description: 사용자의 리프레시 토큰
