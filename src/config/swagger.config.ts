@@ -1,3 +1,5 @@
+// src/config/swagger.config.ts
+import path from 'path';
 import swaggerJSDoc from 'swagger-jsdoc';
 
 const swaggerOptions: swaggerJSDoc.Options = {
@@ -25,8 +27,8 @@ const swaggerOptions: swaggerJSDoc.Options = {
     ],
     servers: [
       {
-        url: 'https://ek8c3h52ac.execute-api.ap-northeast-2.amazonaws.com/dev',
-        description: 'Development Environment',
+        url: 'https://ek8c3h52ac.execute-api.ap-northeast-2.amazonaws.com',
+        description: 'Deployment Environment',
       },
       {
         url: 'http://localhost:8000',
@@ -34,7 +36,10 @@ const swaggerOptions: swaggerJSDoc.Options = {
       },
     ],
   },
-  apis: ['./src/handlers/**/*.ts', './src/handlers/auth.ts'], // 경로는 필요에 따라 수정
+  apis: [path.resolve(__dirname, '../handlers/**/*.ts'), path.resolve(__dirname, '../modules/**/*.ts')], // 경로는 필요에 따라 수정
+  parserOptions: {
+    tsConfigFile: './tsconfig.json',
+  },
 };
 
 export default swaggerOptions;

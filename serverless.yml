@@ -1,3 +1,4 @@
+# serverless.yml
 service: smart-city-climbing-trail
 
 plugins:
@@ -43,6 +44,25 @@ provider:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource: '*'
+
+  httpApi:
+    cors:
+      allowedOrigins:
+        - 'http://cloud-web-s3.s3-website.ap-northeast-2.amazonaws.com' # S3 Swagger UI 도메인으로 변경
+        # - '*'
+      allowedHeaders:
+        - Content-Type
+        - X-Amz-Date
+        - Authorization
+        - X-Api-Key
+        - X-Amz-Security-Token
+      allowedMethods:
+        - OPTIONS
+        - GET
+        - POST
+        - PUT
+        - DELETE
+      maxAge: 86400
 
 functions:
   test-handler:
@@ -177,18 +197,13 @@ functions:
           path: /mountain-info
           method: GET
 
-  swagger-handler:
-    handler: ./src/handlers/swagger.handler
+  swagger-json-handler:
+    handler: ./src/handlers/swagger-json.handler
     events:
-      - httpApi:
-          path: /swagger-ui
-          method: GET
-      - httpApi:
-          path: /swagger-ui/{proxy+}
-          method: GET
       - httpApi:
           path: /swagger.json
           method: GET
+    timeout: 30
 
   alternative-recommendation-handler:
     handler: ./src/handlers/alternative-trail.handler
@@ -208,15 +223,19 @@ custom:
   esbuild:
     bundle: true
     external:
-      - swagger-ui-dist
+      # - swagger-ui-dist
     minify: true
     sourcemap: true
     exclude: [] # Lambda 런타임이 기본 포함하는 모듈 제외
     target: node18
     platform: node
     concurrency: 10
+    loader:
+      '.json': 'json' # JSON 파일 로더 추가
   serverless-offline:
     httpPort: 8000
 
 package:
   individually: true
+  include:
+    - swagger.json
