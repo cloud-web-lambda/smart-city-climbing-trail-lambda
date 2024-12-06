@@ -8,6 +8,42 @@ plugins:
 
 useDotenv: true
 
+resources:
+  Resources:
+    ApiCloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Origins:
+            - DomainName: !Sub 'ek8c3h52ac.execute-api.ap-northeast-2.amazonaws.com'
+              Id: ApiOrigin
+              CustomOriginConfig:
+                OriginProtocolPolicy: https-only
+          Enabled: true
+          DefaultCacheBehavior:
+            TargetOriginId: ApiOrigin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+              - PUT
+              - POST
+              - PATCH
+              - DELETE
+            CachedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            ForwardedValues:
+              QueryString: true
+              Headers:
+                - Authorization
+              Cookies:
+                Forward: none
+          ViewerCertificate:
+            CloudFrontDefaultCertificate: true
+
 provider:
   name: aws
   runtime: nodejs18.x
@@ -30,6 +66,10 @@ provider:
     GOOGLE_MAPS_API_URL: ${env:GOOGLE_MAPS_API_URL}
     DATA_PORTAL_API_URL: ${env:DATA_PORTAL_API_URL}
     DATA_PORTAL_API_KEY: ${env:DATA_PORTAL_API_KEY}
+    USER_POOL_ID: ${env:USER_POOL_ID}
+    CLIENT_ID: ${env:CLIENT_ID}
+    CLIENT_SECRET: ${env:CLIENT_SECRET}
+    REGION: ${env:REGION}
 
   iam:
     role:
@@ -44,12 +84,19 @@ provider:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource: '*'
+        - Effect: Allow
+          Action:
+            - cognito-idp:SignUp
+            - cognito-idp:AdminInitiateAuth
+            - cognito-idp:AdminRespondToAuthChallenge
+            - cognito-idp:GetUser
+          Resource: arn:aws:cognito-idp:ap-northeast-2:654654181350:userpool/${env:USER_POOL_ID}
 
   httpApi:
     cors:
       allowedOrigins:
-        - 'http://cloud-web-s3.s3-website.ap-northeast-2.amazonaws.com' # S3 Swagger UI 도메인으로 변경
-        # - '*'
+        - 'https://diiw82yxi0yyj.cloudfront.net' # 프론트엔드 CloudFront 도메인 추가
+        - 'http://cloud-web-s3.s3-website.ap-northeast-2.amazonaws.com' # S3 Swagger UI 도메인
       allowedHeaders:
         - Content-Type
         - X-Amz-Date
