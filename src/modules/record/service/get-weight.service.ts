@@ -8,5 +8,5 @@ export const getWeightApi = async (accessToken: string) => {
     },
   });
 
-  return response.data.weight; // 응답에서 weight 값 반환
+  return response.data.weight || null;
 };
