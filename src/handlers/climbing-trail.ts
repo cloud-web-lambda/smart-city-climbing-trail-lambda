@@ -9,15 +9,8 @@ export { handler } from '@/modules/recommend/climbing-trail.handler';
  *       [등산로 추천 페이지]
  *       - `등산객 위치`로부터 가장 가까운 `등산로 정보`를 제공합니다.
  *     security:
- *       - Bearer: []
+ *       - bearerAuth: []
  *     parameters:
- *       - name: Authorization
- *         in: header
- *         description: 인증을 위한 Bearer 액세스 토큰
- *         required: true
- *         schema:
- *           type: string
- *           example: "Bearer eyJraWQiOiJoQzJzRUtzb0VyengxVlk5T1JcL3U4ZnZnYjZnSEJkcFc4MjVhNzNcLyt2V2M9IiwiYWxnIjoiUlMyNTYifQ..."
  *       - in: query
  *         name: lat
  *         required: true

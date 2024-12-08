@@ -32,8 +32,15 @@ export const handler = createGatewayHandler<hikerDTO>(async (req, res) => {
   const user = await HikerInfo.findOne({ sub });
 
   if (!user) {
-    // 사용자가 없으면 예외 처리
-    throw new HikerException(ERROR_CODE.USER_NOT_FOUND);
+    const hikerNullData = new hikerDTO({
+      sub: null,
+      weight: null,
+    });
+
+    return res({
+      status: HttpStatus.OK,
+      body: hikerNullData,
+    });
   }
 
   // 응답을 위한 DTO 객체 생성
