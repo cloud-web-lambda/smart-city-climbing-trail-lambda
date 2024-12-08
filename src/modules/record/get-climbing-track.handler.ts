@@ -44,8 +44,7 @@ export const handler = createGatewayHandler<ClimbingTotalDTO>(async (req, res) =
     return res({
       status: HttpStatus.OK,
       body: data,
-    });
-    
+    });  
   }
 
   const climbingTracks = userClimbingTrack.tracks;
