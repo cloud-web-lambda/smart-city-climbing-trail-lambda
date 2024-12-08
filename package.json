@@ -5,7 +5,7 @@
   "scripts": {
     "precreate": "tsc",
     "preupdate": "tsc",
-    "build": "tsc --noemit",
+    "build": "tsc --noemit && ts-node --project tsconfig.generate-swagger.json generate-swagger.ts",
     "serverless:offline": "serverless offline",
     "serverless:deploy": "serverless deploy",
     "serverless:remove": "serverless remove",
@@ -59,6 +59,6 @@
     "serverless-plugin-typescript": "^2.1.5",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   }
 }
