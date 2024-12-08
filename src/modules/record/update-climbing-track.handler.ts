@@ -39,9 +39,9 @@ export const handler = createGatewayHandler<ClimbingTrackDTO>(async (req, res) =
 
   const weight = await getWeightApi(accessToken);
   let calories = 0;
-  if(weight == null){
+  if (weight == null) {
     calories = calculateCalories(startDate, endDate);
-  }else{
+  } else {
     calories = calculateCalories(startDate, endDate, weight);
   }
 
