@@ -48,7 +48,20 @@ export const handler = createGatewayHandler<ClimbingTotalDTO>(async (req, res) =
   const userClimbingTrack = await ClimbingTrackModel.findOne({ sub });
 
   if (!userClimbingTrack) {
-    throw new ClimbingTrackException(ERROR_CODE.NOT_FOUND);
+    const data = new ClimbingTotalDTO({
+      totalHikingTime: 0,
+      totalDistance: 0,    
+      totalCalories: 0,    
+      averageHikingTime: 0, 
+      averageDistance: 0, 
+      averageCalories: 0, 
+      trails: []           
+    });
+
+    return res({
+      status: HttpStatus.OK,
+      body: data,
+    }); 
   }
 
   const monthlyClimbingTracks = userClimbingTrack.tracks.filter((track) => {
