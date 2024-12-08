@@ -155,7 +155,7 @@
   ],
   "servers": [
     {
-      "url": "https://ek8c3h52ac.execute-api.ap-northeast-2.amazonaws.com",
+      "url": "https://d3f5n2hgodyf83.cloudfront.net",
       "description": "Deployment Environment"
     },
     {
@@ -255,7 +255,11 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": ["easy", "medium", "hard"]
+              "enum": [
+                "easy",
+                "medium",
+                "hard"
+              ]
             },
             "description": "등산로의 난이도 (easy, medium, hard).",
             "example": "easy"
@@ -408,7 +412,11 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": ["easy", "moderate", "hard"]
+              "enum": [
+                "easy",
+                "moderate",
+                "hard"
+              ]
             },
             "description": "등산로 난이도 (easy, moderate, hard)"
           }
@@ -635,7 +643,11 @@
             "required": true,
             "schema": {
               "type": "string",
-              "enum": ["easy", "medium", "hard"]
+              "enum": [
+                "easy",
+                "medium",
+                "hard"
+              ]
             },
             "description": "등산로의 난이도 (easy, medium, hard).",
             "example": "easy"
@@ -651,7 +663,10 @@
               }
             },
             "description": "제외할 산들의 이름 목록.",
-            "example": ["안산", "인왕산"]
+            "example": [
+              "안산",
+              "인왕산"
+            ]
           }
         ],
         "responses": {
@@ -902,7 +917,10 @@
                         "type": "string",
                         "example": "백두산"
                       },
-                      "example": ["백두산", "북한산"]
+                      "example": [
+                        "백두산",
+                        "북한산"
+                      ]
                     }
                   }
                 }
@@ -1039,7 +1057,10 @@
                         "type": "string",
                         "example": "백두산"
                       },
-                      "example": ["백두산", "북한산"]
+                      "example": [
+                        "백두산",
+                        "북한산"
+                      ]
                     }
                   }
                 }

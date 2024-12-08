@@ -84,31 +84,36 @@ provider:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource: '*'
-        - Effect: Allow
-          Action:
-            - cognito-idp:SignUp
-            - cognito-idp:AdminInitiateAuth
-            - cognito-idp:AdminRespondToAuthChallenge
-            - cognito-idp:GetUser
-          Resource: arn:aws:cognito-idp:ap-northeast-2:654654181350:userpool/${env:USER_POOL_ID}
+        # - Effect: Allow
+        #   Action:
+        #     - cognito-idp:SignUp
+        #     - cognito-idp:AdminInitiateAuth
+        #     - cognito-idp:AdminRespondToAuthChallenge
+        #     - cognito-idp:GetUser
+        #   Resource: arn:aws:cognito-idp:ap-northeast-2:654654181350:userpool/${env:USER_POOL_ID}
 
   httpApi:
     cors:
+      allowCredentials: false
       allowedOrigins:
-        - 'https://diiw82yxi0yyj.cloudfront.net' # 프론트엔드 CloudFront 도메인 추가
-        - 'http://cloud-web-s3.s3-website.ap-northeast-2.amazonaws.com' # S3 Swagger UI 도메인
+        # - 'https://diiw82yxi0yyj.cloudfront.net' # 프론트엔드 CloudFront 도메인 추가
+        # - 'http://cloud-web-s3.s3-website.ap-northeast-2.amazonaws.com' # S3 Swagger UI 도메인
+        # - 'http://localhost:3000'
+        - '*'
       allowedHeaders:
-        - Content-Type
-        - X-Amz-Date
-        - Authorization
-        - X-Api-Key
-        - X-Amz-Security-Token
+        # - Content-Type
+        # - X-Amz-Date
+        # - Authorization
+        # - X-Api-Key
+        # - X-Amz-Security-Token
+        - '*'
       allowedMethods:
-        - OPTIONS
-        - GET
-        - POST
-        - PUT
-        - DELETE
+        # - OPTIONS
+        # - GET
+        # - POST
+        # - PUT
+        # - DELETE
+        - '*'
       maxAge: 86400
 
 functions:
@@ -223,12 +228,14 @@ functions:
       - httpApi:
           path: /sign-out
           method: POST
+
   refreshToken-handler:
     handler: ./src/handlers/refreshToken.handler
     events:
       - httpApi:
           path: /refresh
           method: POST
+
   accessToken-handler:
     handler: ./src/handlers/accessToken.handler
     events:
