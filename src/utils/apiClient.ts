@@ -37,6 +37,10 @@ googleMapsApiClient.interceptors.request.use((config) => {
   return config;
 });
 
+export const ApiClient = axios.create({
+  baseURL: env.API_URL,
+});
+
 // TODO: REMOVE
 export const testApiClient = axios.create({
   baseURL: env.TEST_API_URL,

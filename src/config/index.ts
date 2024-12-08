@@ -28,4 +28,6 @@ export default {
   CLIENT_ID: process.env.CLIENT_ID as string,
   CLIENT_SECRET: process.env.CLIENT_SECRET as string,
   REGION: process.env.REGION as string,
+
+  API_URL: process.env.API_URL as string,
 };

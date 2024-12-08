@@ -8,6 +8,8 @@ import { ERROR_CODE } from './exception/error-code';
 import { ClimbingTrackException } from './exception/climbing-track.exception';
 import { LoginException } from '../login/exception/login.exception';
 import { getSubFromAccessToken } from '@/utils/getSub';
+import { getWeightApi } from './service/get-weight.service';
+import { calculateCalories } from './service/calculate-calories.service';
 
 export const handler = createGatewayHandler<ClimbingTrackDTO>(async (req, res) => {
   const authorizationHeader = req.headers?.Authorization || req.headers?.authorization;
@@ -28,15 +30,22 @@ export const handler = createGatewayHandler<ClimbingTrackDTO>(async (req, res) =
     throw new ClimbingTrackException(ERROR_CODE.MISSING_REQUIRED_PARAM);
   }
 
-  const { trailName, startDate, endDate, distance, calories } = req.body as {
+  const { trailName, startDate, endDate, distance } = req.body as {
     trailName: string;
     startDate: Date;
     endDate: Date;
     distance: number;
-    calories: number;
   };
 
-  if (!trailName || !startDate || !endDate || !distance || !calories) {
+  const weight = await getWeightApi(accessToken);
+  let calories = 0;
+  if (weight == null) {
+    calories = calculateCalories(startDate, endDate);
+  } else {
+    calories = calculateCalories(startDate, endDate, weight);
+  }
+
+  if (!trailName || !startDate || !endDate || !distance) {
     throw new ClimbingTrackException(ERROR_CODE.NOT_FORMAT);
   }
 
