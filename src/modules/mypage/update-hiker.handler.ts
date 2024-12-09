@@ -33,35 +33,47 @@ export const handler = createGatewayHandler<hikerDTO>(async (req, res) => {
 
   // DB 연결
   await connectDB();
+  try{
+    // 기존에 해당 sub로 사용자가 있는지 확인
+    let user = await HikerInfo.findOne({ sub });
+    console.log('check');
 
-  // 기존에 해당 sub로 사용자가 있는지 확인
-  let user = await HikerInfo.findOne({ sub });
-  console.log('check');
+    if (user) {
+      // 기존 사용자 데이터가 있으면, 몸무게만 업데이트
+      user.weight = weight;
+      await user.save(); // DB에 저장
+      console.log('User weight updated');
+    } else {
+      // 새로운 사용자는 새로 생성
+      user = new HikerInfo({
+        sub,
+        weight,
+      });
+      await user.save(); // DB에 저장
+      console.log('New user created');
+    }
 
-  if (user) {
-    // 기존 사용자 데이터가 있으면, 몸무게만 업데이트
-    user.weight = weight;
-    await user.save(); // DB에 저장
-    console.log('User weight updated');
-  } else {
-    // 새로운 사용자는 새로 생성
-    user = new HikerInfo({
-      sub,
-      weight,
+    // 응답을 위한 DTO 객체 생성
+    const hikerData = new hikerDTO({
+      sub: user.sub,
+      weight: user.weight,
     });
-    await user.save(); // DB에 저장
-    console.log('New user created');
+
+    // 성공적으로 데이터를 반환
+    return res({
+      status: HttpStatus.OK,
+      body: hikerData,
+    });
+}catch(error){
+  if (error.name === 'ValidationError') {
+    const validationError = Object.values(error.errors)[0] as { message: string };
+    return {
+      statusCode: HttpStatus.BAD_REQUEST,
+      body: JSON.stringify({
+        status: 400,
+        message: validationError.message
+      })
+    };
   }
-
-  // 응답을 위한 DTO 객체 생성
-  const hikerData = new hikerDTO({
-    sub: user.sub,
-    weight: user.weight,
-  });
-
-  // 성공적으로 데이터를 반환
-  return res({
-    status: HttpStatus.OK,
-    body: hikerData,
-  });
+}
 });
