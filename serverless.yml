@@ -152,6 +152,7 @@ provider:
     CLIENT_ID: ${env:CLIENT_ID}
     CLIENT_SECRET: ${env:CLIENT_SECRET}
     REGION: ${env:REGION}
+    API_URL: ${env:API_URL}
 
   iam:
     role:
@@ -280,7 +281,7 @@ functions:
     handler: ./src/handlers/update-climbing-track.handler
     events:
       - httpApi:
-          path: /climbing/track
+          path: /climbing/track/new
           method: POST
 
   sign-up-handler:
