@@ -27,7 +27,7 @@ const swaggerOptions: swaggerJSDoc.Options = {
     ],
     servers: [
       {
-        url: 'https://d3f5n2hgodyf83.cloudfront.net',
+        url: 'https://d1hkbofepe7wkl.cloudfront.net',
         description: 'Deployment Environment',
       },
       {

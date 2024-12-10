@@ -39,8 +39,90 @@ resources:
               QueryString: true
               Headers:
                 - Authorization
+                - Origin
               Cookies:
                 Forward: none
+            Compress: true
+          CacheBehaviors:
+            - PathPattern: /hikers
+              TargetOriginId: ApiOrigin
+              ViewerProtocolPolicy: redirect-to-https
+              DefaultTTL: 0
+              MaxTTL: 1
+              MinTTL: 0
+              AllowedMethods:
+                - GET
+                - HEAD
+                - OPTIONS
+                - PUT
+                - POST
+                - PATCH
+                - DELETE
+              CachedMethods:
+                - GET
+                - HEAD
+                - OPTIONS
+              ForwardedValues:
+                QueryString: true
+                Headers:
+                  - Authorization
+                  - Origin
+                Cookies:
+                  Forward: none
+              Compress: true
+            - PathPattern: /climbing/track
+              TargetOriginId: ApiOrigin
+              ViewerProtocolPolicy: redirect-to-https
+              DefaultTTL: 0
+              MaxTTL: 1
+              MinTTL: 0
+              AllowedMethods:
+                - GET
+                - HEAD
+                - OPTIONS
+                - PUT
+                - POST
+                - PATCH
+                - DELETE
+              CachedMethods:
+                - GET
+                - HEAD
+                - OPTIONS
+              ForwardedValues:
+                QueryString: true
+                Headers:
+                  - Authorization
+                  - Origin
+                Cookies:
+                  Forward: none
+              Compress: true
+            - PathPattern: /climbing/monthly-track
+              TargetOriginId: ApiOrigin
+              ViewerProtocolPolicy: redirect-to-https
+              DefaultTTL: 0
+              MaxTTL: 1
+              MinTTL: 0
+              AllowedMethods:
+                - GET
+                - HEAD
+                - OPTIONS
+                - PUT
+                - POST
+                - PATCH
+                - DELETE
+              CachedMethods:
+                - GET
+                - HEAD
+                - OPTIONS
+              ForwardedValues:
+                QueryString: true
+                Headers:
+                  - Authorization
+                  - Origin
+                Cookies:
+                  Forward: none
+              Compress: true
+
           ViewerCertificate:
             CloudFrontDefaultCertificate: true
 
